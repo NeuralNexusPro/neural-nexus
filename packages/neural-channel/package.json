@@ -2,7 +2,7 @@
   "name": "@neural-nexus/neural-channel",
   "version": "0.0.1",
   "description": "> TODO: description",
-  "author": "gongjianb <gongjianb@enn.cn>",
+  "author": "archersado <archersado@hotmail.com>",
   "homepage": "https://github.com/NeuralNexusPro/neural-nexus#readme",
   "license": "MIT",
   "main": "lib/neural-channel.js",

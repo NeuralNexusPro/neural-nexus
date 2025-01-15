@@ -38,28 +38,28 @@ export default class ChannelClient {
     });
   }
 
-  sendTo = <T>(message: MessageProtocol<T>, target?: string) => {
+  sendTo = <T>(message: T, target?: string) => {
     if (!this.master) {
       this.logger.error('请先执行 handshake!')
       return;
     }
     const channelMessage = messageBuilder(
       MessageType.UNICAST_REQUEST,
-      message.payload,
+      message,
       this.name,
       target
     )
     this.master.postMessage(channelMessage);
   }
 
-  broadcast = <t>(message: MessageProtocol<t>) => {
+  broadcast = <t>(message: t) => {
     if (!this.master) {
       this.logger.error('请先执行 handshake!')
       return;
     }
     const channelMessage = messageBuilder(
       MessageType.BROADCAST_REQUEST,
-      message.payload,
+      message,
       this.name,
     )
     this.master.postMessage(channelMessage);
@@ -79,7 +79,7 @@ export default class ChannelClient {
       window.removeEventListener("message", this.eventListener);
     }
   }
-  
+    
   handshake() {
     if (window[CHANNEL_MANAGER_SYMBOL]) {
       const master = window[CHANNEL_MANAGER_SYMBOL];

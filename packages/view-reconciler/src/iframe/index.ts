@@ -1,10 +1,11 @@
 import Reconciler, { IOnePage } from '../base/reconciler';
-import { channel } from '@neural-nexus/portal-channel';
-import { ChannelMessageType } from '..//message';
+import { Manager } from '@neural-nexus/portal-channel';
+import { ChannelLifecycleMessageType } from '..//message';
 
 export default class IframeReconciler extends Reconciler {
   disconnect: any;
   iframeNode: HTMLIFrameElement | null;
+  channelManger: Manager;
 
   static URL_RGX = /(\/\/)?([^\/\s]+\/?)(.*)/i;
 
@@ -21,26 +22,18 @@ export default class IframeReconciler extends Reconciler {
   start () {
     super.start();
     if (!this.view.data.url) {
-      channel.send(ChannelMessageType.PAGE_LOADING_FINISH);
+      this.channelManger.sendTo(ChannelLifecycleMessageType.PAGE_LOADING_FINISH, );
       return
     }
-    channel.send(ChannelMessageType.PAGE_LOADING_START);
-
-    this.disconnect = channel.handshake({
-      container: this.view.mountNode,
-      url: this.view.data.url,
-      name: `ennIframe-${this.view.data.id}`,
-      classListArray: ['postmate-injected-iframe'],
-    });
+    this.channelManger.sendTo(ChannelLifecycleMessageType.PAGE_LOADING_START, this.view.code);
     this.iframeNode = (this.view.mountNode as HTMLElement).childNodes[0] as HTMLIFrameElement;
     const onLoad = () => {
-      channel.send(ChannelMessageType.PAGE_LOADING_FINISH);
-
-      console.log('iframe on load');
+      this.channelManger.trigger(ChannelLifecycleMessageType.PAGE_LOADING_FINISH);
       // mount hook
+      this.channelManger.sendTo()
       this.iframeNode?.contentWindow?.postMessage(
         {
-          type: '@@cb.request.mount',
+          type: ChannelLifecycleMessageType.PAGE_MOUNT,
           payload: this.globalState,
         },
         this.iframeNode.src
@@ -57,7 +50,7 @@ export default class IframeReconciler extends Reconciler {
     super.pause();
     (this.iframeNode as HTMLIFrameElement)?.contentWindow?.postMessage(
       {
-        type: '@@cb.request.unActive',
+        type: ChannelLifecycleMessageType.PAGE_UNACTIVE,
         payload: this.view.data,
       },
       (this.iframeNode as HTMLIFrameElement).src
@@ -69,7 +62,7 @@ export default class IframeReconciler extends Reconciler {
 
     this.iframeNode?.contentWindow?.postMessage(
       {
-        type: '@@cb.request.active',
+        type: ChannelLifecycleMessageType.PAGE_ACTIVE,
         payload: this.view.data,
       },
       this.iframeNode.src
@@ -86,18 +79,18 @@ export default class IframeReconciler extends Reconciler {
     this.iframeNode &&
       (this.iframeNode.contentWindow as Window)?.postMessage(
         {
-          type: '@@cb.request.unmount',
+          type: ChannelLifecycleMessageType.PAGE_UNMOUNT,
           payload: this.globalState,
         },
         this.iframeNode.src
       );
       
-    this.disconnect();
+    this.channelManger.disconnect(this.view.code);
     super.destroy();
   }
 
   restart () {
-    channel.send(ChannelMessageType.PUSH_ROUTER_STACK, {
+    this.channelManger.trigger(ChannelLifecycleMessageType.PUSH_ROUTER_STACK, {
       type: "iframe",
       view: this.view.data,
       ...this.getPath()
@@ -115,7 +108,7 @@ export default class IframeReconciler extends Reconciler {
     this.iframeNode &&
       (this.iframeNode.contentWindow as Window).postMessage(
         {
-          type: '@@cb.request.update',
+          type: ChannelLifecycleMessageType.PAGE_UPDATE,
           payload,
         },
         this.iframeNode.src

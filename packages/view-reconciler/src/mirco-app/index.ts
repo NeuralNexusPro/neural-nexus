@@ -1,8 +1,7 @@
 import microApp, { unmountApp } from '@micro-zoe/micro-app';
 import Reconciler, { IDestoryOptions, IOnePage } from '../base/reconciler';
 import { getMetaInfo, getRequest } from '../utils';
-import { ChannelMessageType } from '..//message';
-import { channel } from '@neural-nexus/portal-channel';
+import { ChannelLifecycleMessageType } from '..//message';
 export default class MicroAppReconciler extends Reconciler {
 
   static URL_RGX = /(microapp:\/\/)?([^\/\s]+\/?)(.*)/i;
@@ -33,7 +32,7 @@ export default class MicroAppReconciler extends Reconciler {
 
   start () {
     super.start();
-    channel.send(ChannelMessageType.PAGE_LOADING_START);
+    this.channelManger.trigger(ChannelLifecycleMessageType.PAGE_LOADING_START);
     // 创建 micro-app
     this.microAppNode = document.createElement('micro-app');
 
@@ -42,7 +41,7 @@ export default class MicroAppReconciler extends Reconciler {
     // to active micro app router
     // then load micro app
 
-    channel.send(ChannelMessageType.PUSH_ROUTER_STACK_WITH_VALIDATE, {
+    this.channelManger.trigger(ChannelLifecycleMessageType.PUSH_ROUTER_STACK_WITH_VALIDATE, {
       type: "MicroApp",
       view: this.view.data,
       path, 
@@ -61,7 +60,7 @@ export default class MicroAppReconciler extends Reconciler {
     }));
 
     (this.view.mountNode as HTMLElement).appendChild(this.microAppNode);
-    channel.send(ChannelMessageType.PAGE_LOADING_FINISH);
+    this.channelManger.trigger(ChannelLifecycleMessageType.PAGE_LOADING_FINISH);
   }
 
   pause () {
@@ -94,7 +93,7 @@ export default class MicroAppReconciler extends Reconciler {
 
   restart () {
     const { path, query, baseRoute, appId } = this.getPath();
-    channel.send(ChannelMessageType.PUSH_ROUTER_STACK, {
+    this.channelManger.trigger(ChannelLifecycleMessageType.PUSH_ROUTER_STACK, {
       type: this.constructor.name,
       view: this.view.data,
       path,

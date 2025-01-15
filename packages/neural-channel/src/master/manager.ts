@@ -19,7 +19,9 @@ export default class MessageChannelManager {
             this.logger.warn('不能重复注册 channel master');
             return
         }
-        
+        if (window[CHANNEL_MANAGER_SYMBOL]) {
+            return window[CHANNEL_MANAGER_SYMBOL];
+        }
         this.channels = new Map();
         this.name = 'master';
         this.enableLogging = options.enableLogging ?? false;
@@ -39,7 +41,7 @@ export default class MessageChannelManager {
         this.logger.info('MessageChannelManager setup completed in main window');
     }
 
-    private onMessage = function(event: MessageEvent) {
+    private onMessage = (event: MessageEvent) => {
         const { type, soruce, target, payload } = event.data;
         switch(type) {
             case MessageType.HANDSHAKE: 
@@ -49,11 +51,11 @@ export default class MessageChannelManager {
                 this.disconnect(soruce);
                 break;
             case MessageType.BROADCAST_REQUEST:
-                this.broadcast({ payload });
+                this.broadcast<any>(payload);
                 break;
             case MessageType.UNICAST_REQUEST: {
                 if (target) {
-                    this.sendTo({ payload }, target)
+                    this.sendTo<any>(payload, target)
                 } else {
                     this.handleClientEvent(event)
                 }
@@ -80,6 +82,13 @@ export default class MessageChannelManager {
             this.masterEventMap.set(eventName, [ ...listeners, callback]);
         } else {
             this.masterEventMap.set(eventName, [ callback ]);
+        }
+    }
+
+    trigger<T>(eventName: string, payload?: T) {
+        if (this.masterEventMap.has(eventName)) {
+            const listeners = this.masterEventMap.get(eventName);
+            listeners?.forEach(listener => listener(payload));
         }
     }
 
@@ -143,11 +152,10 @@ export default class MessageChannelManager {
         event.source?.postMessage(channelMessage, { targetOrigin: '*', transfer: [remotePort] });
     }
 
-    broadcast<T>(message: MessageProtocol<T>) {
-        const { payload } = message;
+    broadcast<T>(message: T) {
         const channelMessage: ChannelMessage<T> = messageBuilder(
             MessageType.BROADCAST,
-            payload,
+            message,
             this.name,
         )
         for (const [_, ports] of this.channels) {
@@ -155,19 +163,17 @@ export default class MessageChannelManager {
         }
     }
 
-    sendTo<T>(message: MessageProtocol<T>, target: string) {
+    sendTo<T>(message: T, target: string) {
         if (!this.channels.has(target)) {
             this.logger.error(`${target} 接收方不存在!`);
         }
         const channelPorts = this.channels.get(target);
-        const { payload } = message;
         const channelMessage: ChannelMessage<T> = messageBuilder(
             MessageType.UNICAST,
-            payload,
+            message,
             this.name,
             target
         )
         channelPorts.remotePort.postMessage(channelMessage)
     }
-
 }

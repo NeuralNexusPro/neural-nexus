@@ -1,9 +1,7 @@
 import { loadMicroApp } from 'qiankun';
 import Reconciler, { IOnePage } from '../base/reconciler';
-
-import { ChannelMessageType } from '..//message';
+import { ChannelLifecycleMessageType } from '..//message';
 import { getMetaInfo, getRequest } from '../utils';
-import { channel } from '@neural-nexus/portal-channel';
 
 export default class QiankunReconciler extends Reconciler {
   microApp: any;
@@ -42,7 +40,7 @@ export default class QiankunReconciler extends Reconciler {
     const { path, query, baseRoute, appId } = this.getPath();
     this.setRoute();
 
-    channel.send(ChannelMessageType.PUSH_ROUTER_STACK_WITH_VALIDATE, {
+    this.channelManger.trigger(ChannelLifecycleMessageType.PUSH_ROUTER_STACK_WITH_VALIDATE, {
       type: this.constructor.name,
       view: this.view.data,
       path,
@@ -79,7 +77,7 @@ export default class QiankunReconciler extends Reconciler {
     );
 
     (this.view.mountNode as HTMLElement).appendChild(microAppNode);
-    channel.send(ChannelMessageType.PAGE_LOADING_FINISH);
+    this.channelManger.trigger(ChannelLifecycleMessageType.PAGE_LOADING_FINISH);
   }
 
   pause () {
@@ -116,7 +114,7 @@ export default class QiankunReconciler extends Reconciler {
 
   restart () {
     const { query, path, appId, baseRoute } = this.getPath();
-    channel.send(ChannelMessageType.PUSH_ROUTER_STACK, {
+    this.channelManger.trigger(ChannelLifecycleMessageType.PUSH_ROUTER_STACK, {
       type: this.constructor.name,
       view: this.view.data,
       path,

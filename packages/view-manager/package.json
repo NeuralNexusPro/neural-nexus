@@ -1,5 +1,5 @@
 {
-  "name": "@neural-nexus/portal-view-manager",
+  "name": "@neural-nexus/view-manager",
   "version": "0.0.1",
   "description": "",
   "main": "lib/index.js",
@@ -21,8 +21,8 @@
   "author": "archersado",
   "license": "MIT",
   "dependencies": {
-    "@neural-nexus/portal-view-reconciler": "^0.0.1",
-    "@neural-nexus/portal-channel": "^0.0.1",
+    "@neural-nexus/view-reconciler": "^0.0.1",
+    "@neural-nexus/neural-channel": "^0.0.1",
     "llpage": "^1.1.5"
   },
   "devDependencies": {

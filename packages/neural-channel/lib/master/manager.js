@@ -11,7 +11,7 @@ export default class MessageChannelManager {
         this.enableLogging = false;
         this.bufferQueue = new MessageBufferQueue(10);
         this.masterEventMap = new Map();
-        this.onMessage = function (event) {
+        this.onMessage = (event) => {
             const { type, soruce, target, payload } = event.data;
             switch (type) {
                 case MessageType.HANDSHAKE:
@@ -21,12 +21,12 @@ export default class MessageChannelManager {
                     this.disconnect(soruce);
                     break;
                 case MessageType.BROADCAST_REQUEST:
-                    this.broadcast({ payload });
+                    this.broadcast(payload);
                     break;
                 case MessageType.UNICAST_REQUEST:
                     {
                         if (target) {
-                            this.sendTo({ payload }, target);
+                            this.sendTo(payload, target);
                         }
                         else {
                             this.handleClientEvent(event);
@@ -90,6 +90,9 @@ export default class MessageChannelManager {
             this.logger.warn('不能重复注册 channel master');
             return;
         }
+        if (window[CHANNEL_MANAGER_SYMBOL]) {
+            return window[CHANNEL_MANAGER_SYMBOL];
+        }
         this.channels = new Map();
         this.name = 'master';
         this.enableLogging = (_a = options.enableLogging) !== null && _a !== void 0 ? _a : false;
@@ -115,6 +118,12 @@ export default class MessageChannelManager {
             this.masterEventMap.set(eventName, [callback]);
         }
     }
+    trigger(eventName, payload) {
+        if (this.masterEventMap.has(eventName)) {
+            const listeners = this.masterEventMap.get(eventName);
+            listeners === null || listeners === void 0 ? void 0 : listeners.forEach(listener => listener(payload));
+        }
+    }
     disconnect(channelName) {
         const channelPorts = this.channels.get(channelName);
         if (channelPorts) {
@@ -125,8 +134,7 @@ export default class MessageChannelManager {
         }
     }
     broadcast(message) {
-        const { payload } = message;
-        const channelMessage = messageBuilder(MessageType.BROADCAST, payload, this.name);
+        const channelMessage = messageBuilder(MessageType.BROADCAST, message, this.name);
         for (const [_, ports] of this.channels) {
             ports.remotePort.postMessage(channelMessage);
         }
@@ -136,8 +144,7 @@ export default class MessageChannelManager {
             this.logger.error(`${target} 接收方不存在!`);
         }
         const channelPorts = this.channels.get(target);
-        const { payload } = message;
-        const channelMessage = messageBuilder(MessageType.UNICAST, payload, this.name, target);
+        const channelMessage = messageBuilder(MessageType.UNICAST, message, this.name, target);
         channelPorts.remotePort.postMessage(channelMessage);
     }
 }

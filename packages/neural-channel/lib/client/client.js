@@ -20,7 +20,7 @@ export default class ChannelClient {
                 this.logger.error('请先执行 handshake!');
                 return;
             }
-            const channelMessage = messageBuilder(MessageType.UNICAST_REQUEST, message.payload, this.name, target);
+            const channelMessage = messageBuilder(MessageType.UNICAST_REQUEST, message, this.name, target);
             this.master.postMessage(channelMessage);
         };
         this.broadcast = (message) => {
@@ -28,7 +28,7 @@ export default class ChannelClient {
                 this.logger.error('请先执行 handshake!');
                 return;
             }
-            const channelMessage = messageBuilder(MessageType.BROADCAST_REQUEST, message.payload, this.name);
+            const channelMessage = messageBuilder(MessageType.BROADCAST_REQUEST, message, this.name);
             this.master.postMessage(channelMessage);
         };
         this.disconnect = () => {

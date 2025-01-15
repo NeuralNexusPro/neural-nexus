@@ -1,7 +1,7 @@
-import { channel } from '@neural-nexus/portal-channel';
+import { Manager, getChannelManager } from '@neural-nexus/portal-channel';
 import { Page } from 'llpage';
 import { getMetaInfo, getRequest } from '../utils';
-import { ChannelMessageType } from '../message';
+import { ChannelLifecycleMessageType } from '../message';
 export interface IDestoryOptions {
   callback?: () => void|PromiseLike<any>;
 }
@@ -9,6 +9,7 @@ export interface IDestoryOptions {
 export interface IOnePage extends Page {
   title: string;
   url: string;
+  code: string;
   context: {[key: string]: any};
   storagePath: string;
   iframeContentId: string;
@@ -18,16 +19,23 @@ export interface IOnePage extends Page {
   data: any;
 }
 
+export interface ILifecycle {
+  type: string;
+  payload: any;
+}
+
 export default abstract class Reconciler {
   view: IOnePage;
   globalState: {[key: string]: any};
   iframeContentId: string;
   static URL_RGX = new RegExp("");
+  channelManger: Manager;
 
   constructor(view: IOnePage, globalState: {[key: string]: any} = {}, iframeContentId: string) {
     this.view = view;
     this.globalState = globalState;
     this.iframeContentId = iframeContentId
+    this.channelManger = getChannelManager();
   };
 
   getPath() {
@@ -71,7 +79,10 @@ export default abstract class Reconciler {
   };
   resume(isActive: boolean, isResume: boolean) {
     if (isActive) {
-      channel.send(ChannelMessageType.PUSH_ROUTER_STACK, this.getPath())
+      this.channelManger.sendTo<ILifecycle>({
+        type: ChannelLifecycleMessageType.PUSH_ROUTER_STACK, 
+        payload: this.getPath()
+      }, this.view.code);
     }
     if (isResume) {
       if (isActive) {

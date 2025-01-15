@@ -1,6 +1,6 @@
 import Reconciler, { IOnePage, IframeReconciler, MicroAppReconciler, QiankunReconciler } from '@neural-nexus/portal-view-reconciler';
 import { createPage, Page } from 'llpage';
-import { channel } from '@neural-nexus/portal-channel';
+import { getManagerInstance, Manager } from '@neural-nexus/neural-channel';
 export enum ChannelMessageType {
   APP_DESTORY = 'app_destory'
 }
@@ -8,6 +8,7 @@ export enum ChannelMessageType {
 
 export interface IViewOpts {
   id: string;
+  code: string;
   title: string;
   url: string;
   context: {[key: string]: any};
@@ -17,7 +18,7 @@ export interface IViewOpts {
   urlQuery: string;
 }
 
-export interface IPage extends IViewOpts  {
+export interface IPage extends IViewOpts {
   rootNode: HTMLElement | null;
   mountNode: HTMLElement | null;
   entity: Reconciler;
@@ -33,10 +34,12 @@ export enum ReconcilerType {
 export default class View {
   id: string;
   page: Page;
+  code: string;
   reconcilerType: ReconcilerType;
   entity: Reconciler;
   rootNode: HTMLElement | null;
   mountNode: HTMLElement | null;
+  channelManager: Manager;
   url: string;
   title: string;
   data: any;
@@ -47,11 +50,12 @@ export default class View {
     // if (!pattern) throw new Error(`接入的视图无效! 请检查视图地址! ${url}`);
     const [_, scheme] = pattern;
 
+    this.channelManager = getManagerInstance();
     this.id = id;
     this.url = url;
     this.title = title;
+    this.code = `${title}-${id}`;
 
-    console.log(scheme, 'scheme')
     const createEntity = (page: IOnePage) => {
       switch (scheme) {
         case ReconcilerType.MICROAPP:
@@ -68,6 +72,7 @@ export default class View {
         id,
         title,
         url,
+        code: this.code,
         context,
         currentRouteName,
         storagePath,
@@ -102,8 +107,7 @@ export default class View {
       async onDestroy () {
         await this.po.destroy();
           
-        channel.send(ChannelMessageType.APP_DESTORY);
-    
+        this.channelManager.sendTo(ChannelMessageType.APP_DESTORY, this.code);
         return this.data;
       },
       async onRestart () {
