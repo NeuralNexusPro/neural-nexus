@@ -1,5 +1,5 @@
 {
-  "name": "@neural-nexus/portal-view-reconciler",
+  "name": "@neural-nexus/view-reconciler",
   "version": "0.0.1",
   "description": "",
   "main": "lib/index.js",

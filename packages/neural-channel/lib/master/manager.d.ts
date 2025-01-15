@@ -1,5 +1,4 @@
 import { ManagerOptions } from '../type';
-import { MessageProtocol } from '../type';
 export declare const CHANNEL_MANAGER_SYMBOL: unique symbol;
 export default class MessageChannelManager {
     private channels;
@@ -14,9 +13,10 @@ export default class MessageChannelManager {
     private onMessage;
     getChannelPort: (channelName: string) => MessagePort;
     on(eventName: string, callback: (...any: any[]) => void): void;
+    trigger<T>(eventName: string, payload?: T): void;
     disconnect(channelName: string): void;
     private handleClientEvent;
     private handleClientHandshake;
-    broadcast<T>(message: MessageProtocol<T>): void;
-    sendTo<T>(message: MessageProtocol<T>, target: string): void;
+    broadcast<T>(message: T): void;
+    sendTo<T>(message: T, target: string): void;
 }
