@@ -1,6 +1,6 @@
 {
   "name": "@neural-nexus/view-reconciler",
-  "version": "0.0.1-0.0.1-alpha.0.0",
+  "version": "0.0.1-alpha.0.0",
   "description": "",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -29,5 +29,6 @@
     "@neural-nexus/neural-channel": "^0.0.1-0.0.1-alpha.0.0",
     "llpage": "^1.1.5",
     "qiankun": "^2.10.1"
-  }
+  },
+  "gitHead": "84332c5483fd8632642024e97dca7b2326072401"
 }

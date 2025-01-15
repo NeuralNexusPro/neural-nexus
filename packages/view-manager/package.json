@@ -1,6 +1,6 @@
 {
   "name": "@neural-nexus/view-manager",
-  "version": "0.0.1-0.0.1-alpha.0.0",
+  "version": "0.0.1-alpha.0.0",
   "description": "",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -28,5 +28,6 @@
   "devDependencies": {
     "@types/node": "^18.15.11",
     "typescript": "^4.9.5"
-  }
+  },
+  "gitHead": "84332c5483fd8632642024e97dca7b2326072401"
 }
