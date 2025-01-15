@@ -16,7 +16,7 @@
   ],
   "publishConfig": {
     "access": "public",
-    "registry": "https://registry.npmmirror.com"
+    "registry": "https://registry.npmjs.org/"
   },
   "repository": {
     "type": "git",
@@ -37,5 +37,5 @@
   "dependencies": {
     "uuid": "^11.0.5"
   },
-  "gitHead": "bd15eddc13fba592f95b255d87a441e9adcb9832"
+  "gitHead": "07c8cac2c198fb63a4d6e67a5c517d8e36af6633"
 }
