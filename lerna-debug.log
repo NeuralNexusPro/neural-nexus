@@ -1,0 +1,28 @@
+0 silly argv {
+0 silly argv   _: [ 'version' ],
+0 silly argv   lernaVersion: '8.1.9',
+0 silly argv   '$0': '/Users/archersado/workspace/mygit/neural-nexus/node_modules/.bin/lerna'
+0 silly argv }
+1 notice cli v8.1.9
+2 verbose packageConfigs Resolving packages based on package.json "workspaces" configuration.
+3 verbose rootPath /Users/archersado/workspace/mygit/neural-nexus
+4 info current version 0.0.0
+5 silly isAnythingCommitted
+6 verbose isAnythingCommitted 1
+7 silly getCurrentBranch
+8 verbose currentBranch main
+9 silly remoteBranchExists
+10 silly isBehindUpstream
+11 error Error: Command failed with exit code 1: git remote update
+11 error kex_exchange_identification: Connection closed by remote host
+11 error Connection closed by 20.205.243.166 port 22
+11 error fatal: Could not read from remote repository.
+11 error
+11 error Please make sure you have the correct access rights
+11 error and the repository exists.
+11 error     at makeError (/Users/archersado/workspace/mygit/neural-nexus/node_modules/execa/lib/error.js:59:11)
+11 error     at module.exports.sync (/Users/archersado/workspace/mygit/neural-nexus/node_modules/execa/index.js:186:17)
+11 error     at Object.execSync (/Users/archersado/workspace/mygit/neural-nexus/node_modules/lerna/dist/index.js:1579:31)
+11 error     at updateRemote (/Users/archersado/workspace/mygit/neural-nexus/node_modules/lerna/dist/index.js:9202:18)
+11 error     at isBehindUpstream (/Users/archersado/workspace/mygit/neural-nexus/node_modules/lerna/dist/index.js:9192:3)
+11 error     at VersionCommand.initialize (/Users/archersado/workspace/mygit/neural-nexus/node_modules/lerna/dist/index.js:9486:57)
