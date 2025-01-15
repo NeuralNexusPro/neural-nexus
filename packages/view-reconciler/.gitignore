@@ -1,0 +1,7 @@
+node_modules/
+lib/
+build/
+enpm-global/
+*-lock.*
+*.lock
+*.log
