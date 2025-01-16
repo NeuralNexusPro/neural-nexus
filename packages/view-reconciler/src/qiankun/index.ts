@@ -1,6 +1,6 @@
 import { loadMicroApp } from 'qiankun';
 import Reconciler, { IOnePage } from '../base/reconciler';
-import { ChannelLifecycleMessageType } from '..//message';
+import { ChannelLifecycleMessageType } from '../message';
 import { getMetaInfo, getRequest } from '../utils';
 
 export default class QiankunReconciler extends Reconciler {

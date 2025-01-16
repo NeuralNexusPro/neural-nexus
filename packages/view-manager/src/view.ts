@@ -1,4 +1,4 @@
-import Reconciler, { IOnePage, IframeReconciler, MicroAppReconciler, QiankunReconciler } from '@neural-nexus/portal-view-reconciler';
+import Reconciler, { IOnePage, IframeReconciler, MicroAppReconciler, QiankunReconciler } from '@neural-nexus/view-reconciler';
 import { createPage, Page } from 'llpage';
 import { getManagerInstance, Manager } from '@neural-nexus/neural-channel';
 export enum ChannelMessageType {
