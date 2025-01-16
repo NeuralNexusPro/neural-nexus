@@ -1,4 +1,4 @@
-import { Manager, getChannelManager } from '@neural-nexus/portal-channel';
+import { Manager, getManagerInstance } from '@neural-nexus/neural-channel';
 import { Page } from 'llpage';
 import { getMetaInfo, getRequest } from '../utils';
 import { ChannelLifecycleMessageType } from '../message';
@@ -35,7 +35,7 @@ export default abstract class Reconciler {
     this.view = view;
     this.globalState = globalState;
     this.iframeContentId = iframeContentId
-    this.channelManger = getChannelManager();
+    this.channelManger = getManagerInstance();
   };
 
   getPath() {
@@ -79,10 +79,11 @@ export default abstract class Reconciler {
   };
   resume(isActive: boolean, isResume: boolean) {
     if (isActive) {
-      this.channelManger.sendTo<ILifecycle>({
-        type: ChannelLifecycleMessageType.PUSH_ROUTER_STACK, 
-        payload: this.getPath()
-      }, this.view.code);
+      this.channelManger.sendTo<Object>(
+        ChannelLifecycleMessageType.PUSH_ROUTER_STACK, 
+        this.getPath(), 
+        this.view.code
+      );
     }
     if (isResume) {
       if (isActive) {

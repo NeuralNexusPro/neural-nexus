@@ -1,5 +1,5 @@
 import Reconciler, { IOnePage } from '../base/reconciler';
-import { Manager } from '@neural-nexus/portal-channel';
+import { Manager } from '@neural-nexus/neural-channel';
 import { ChannelLifecycleMessageType } from '..//message';
 
 export default class IframeReconciler extends Reconciler {
@@ -22,15 +22,22 @@ export default class IframeReconciler extends Reconciler {
   start () {
     super.start();
     if (!this.view.data.url) {
-      this.channelManger.sendTo(ChannelLifecycleMessageType.PAGE_LOADING_FINISH, );
+      this.channelManger.sendTo<string>(
+        ChannelLifecycleMessageType.PAGE_LOADING_FINISH, 
+        ChannelLifecycleMessageType.PAGE_LOADING_FINISH,
+        this.view.code
+      );
       return
     }
-    this.channelManger.sendTo(ChannelLifecycleMessageType.PAGE_LOADING_START, this.view.code);
+    this.channelManger.sendTo(
+      ChannelLifecycleMessageType.PAGE_LOADING_START, 
+      ChannelLifecycleMessageType.PAGE_LOADING_START,      
+      this.view.code
+    );
     this.iframeNode = (this.view.mountNode as HTMLElement).childNodes[0] as HTMLIFrameElement;
     const onLoad = () => {
       this.channelManger.trigger(ChannelLifecycleMessageType.PAGE_LOADING_FINISH);
       // mount hook
-      this.channelManger.sendTo()
       this.iframeNode?.contentWindow?.postMessage(
         {
           type: ChannelLifecycleMessageType.PAGE_MOUNT,
