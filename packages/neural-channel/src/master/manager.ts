@@ -1,12 +1,13 @@
-import { ChannelStore, ManagerOptions, RegisterOptions, ChannelMessage, ChannelPorts } from '../type';
+import { ChannelStore, ChannelStores, ManagerOptions, ChannelMessage, ChannelPorts } from '../type';
 import MessageBufferQueue from './message-buffer' ;
 import { logger } from '../utils/log'
 import { MessageProtocol, MessageType } from '../type';
-import { messageBuilder } from '../message/message';
+import { messageBuilder, messageParser } from '../message/message';
 
 export const CHANNEL_MANAGER_SYMBOL = Symbol('ChannelManager');
 export default class MessageChannelManager {
     private channels: ChannelStore = new Map();
+    private groupChannels: ChannelStores = new Map();
     private isMainWindow: boolean = false;
     private readonly enableLogging: boolean = false;
     private bufferQueue = new MessageBufferQueue(10);
@@ -22,14 +23,13 @@ export default class MessageChannelManager {
         if (window[CHANNEL_MANAGER_SYMBOL]) {
             return window[CHANNEL_MANAGER_SYMBOL];
         }
-        this.channels = new Map();
         this.name = 'master';
         this.enableLogging = options.enableLogging ?? false;
         this.logger = logger('ChannelManger', this.enableLogging);
         window.__messageChannelManagerInstance__ = this;
     }
 
-    public setup(): void {
+    public setup(): () => void {
         // 主应用标识
         this.isMainWindow = true;
         Object.defineProperty(window, 'isMainWindow', {
@@ -38,11 +38,18 @@ export default class MessageChannelManager {
         });
         window[CHANNEL_MANAGER_SYMBOL] = this;
         window.addEventListener('message', this.handleClientHandshake);
+        window.addEventListener(MessageType.HANDSHAKE, this.handleClientHandshake);
         this.logger.info('MessageChannelManager setup completed in main window');
+
+        return () => {
+            window.removeEventListener('message', this.handleClientHandshake);
+            window.removeEventListener(MessageType.HANDSHAKE, this.handleClientHandshake);
+        }
     }
 
     private onMessage = (event: MessageEvent) => {
         const { type, soruce, target, payload } = event.data;
+        const { type: messageType, payload: messagePayload, group } = messageParser(payload)
         switch(type) {
             case MessageType.HANDSHAKE: 
                 this.handleClientHandshake(event.data);
@@ -51,16 +58,23 @@ export default class MessageChannelManager {
                 this.disconnect(soruce);
                 break;
             case MessageType.BROADCAST_REQUEST:
-                this.broadcast<any>(payload);
+                this.broadcastMessage<any>(payload);
                 break;
             case MessageType.UNICAST_REQUEST: {
                 if (target) {
-                    this.sendTo<any>(payload, target)
+                    this.sendMessage<any>(payload, target)
                 } else {
-                    this.handleClientEvent(event)
+                    this.handleClientEvent(messageType, messagePayload)
                 }
             }
                 break;
+            case MessageType.MULTICAST_REQUEST: {
+                if (!this.groupChannels.has(group)) {
+                    this.logger.error(`当前不存在组播分组 ${group}`, event.data);
+                    return;
+                }
+                this.multicastMessage(group, payload);
+            }   
             default:
                 break;
         }
@@ -102,78 +116,160 @@ export default class MessageChannelManager {
         }
     }
 
-    private handleClientEvent = (event: MessageEvent): void => {
-        const { type, payload, target } = event.data as ChannelMessage<any>;
-        if (target && target !== this.name) {
-            const channelPorts = this.channels.get(target);
-            channelPorts.clientPort.postMessage(event.data)
-            return;
-        }
-        if (this.masterEventMap.has(type)) {
-            const listeners = this.masterEventMap.get(type);
+    private handleClientEvent = (eventName: string, payload: any): void => {
+        if (this.masterEventMap.has(eventName)) {
+            const listeners = this.masterEventMap.get(eventName);
             listeners?.forEach(listener => listener(payload));
         }
     }
-
-    private handleClientHandshake = (event: MessageEvent): void =>  {
-        const { id, type, source, payload } = event.data as ChannelMessage<string>;
-        const messageChannel = new MessageChannel();
-        const clientPort = messageChannel.port1;
-        const remotePort = messageChannel.port2;
-        // already in buffer queue
-        if (this.bufferQueue.has(id)) {
-            this.logger.warn('重复消息，已过滤', event.data);
-            return;
+    
+    private handleClientHandshake = (event: MessageEvent | CustomEvent): void =>  {
+        if (event instanceof CustomEvent) {
+            const { id, type, source, payload } = event.detail as ChannelMessage<{name: string, group: string}>;
+            if (this.bufferQueue.has(id)) {
+                this.logger.warn('重复消息，已过滤', event.detail);
+                return;
+            }
+            if (type !== MessageType.HANDSHAKE) {
+                this.logger.warn('非握手消息', event.detail);
+                return;
+            }
+            if (!source) {
+                this.logger.error('来源不明的握手, 已拒绝!', event.detail);
+                return;
+            }
+            if (this.channels.has(source)) {
+                this.logger.error('当前 client 已握手!', source);
+            }
+            const { group } = payload;
+            const messageChannel = new MessageChannel();
+            const clientPort = messageChannel.port1;
+            const remotePort = messageChannel.port2;
+            const ports: ChannelPorts = {
+                clientPort,
+                remotePort
+            }
+            clientPort.onmessage = this.onMessage;
+    
+            this.channels.set(source, ports)        
+            if (group) {
+                if (this.groupChannels.has(group)) {
+                    const groupChannels = this.groupChannels.get(group)
+                    this.groupChannels.set(group, [ ...groupChannels, ports ])
+                } else {
+                    this.groupChannels.set(group, [ ports ])
+                }
+            }
+            const message = {
+                port: remotePort
+            }
+            const channelMessage: ChannelMessage<{port: MessagePort}> = messageBuilder(
+                MessageType.HANDSHAKE_REPLY,         
+                message,
+                this.name,
+            )
+            const handshakeReplyEvent = new CustomEvent(MessageType.HANDSHAKE_REPLY, {
+                detail: channelMessage
+            });
+            window.dispatchEvent(handshakeReplyEvent);
+        } else {
+            const { id, type, source } = event.data as ChannelMessage<{name: string, group: string}>;
+            // already in buffer queue
+            if (this.bufferQueue.has(id)) {
+                this.logger.warn('重复消息，已过滤', event.data);
+                return;
+            }
+            if (type !== MessageType.HANDSHAKE) {
+                this.logger.warn('非握手消息', event.data);
+                return;
+            }
+            if (!source) {
+                this.logger.error('来源不明的握手, 已拒绝!', event.data);
+                return;
+            }
+            if (this.channels.has(source)) {
+                this.logger.error('当前 client 已握手!', source);
+            }
+            const messageChannel = new MessageChannel();
+            const clientPort = messageChannel.port1;
+            const remotePort = messageChannel.port2;
+            const ports: ChannelPorts = {
+                clientPort,
+                remotePort
+            }
+            clientPort.onmessage = this.onMessage;
+    
+            this.channels.set(source, ports)        
+    
+            const channelMessage: ChannelMessage<string> = messageBuilder(
+                MessageType.HANDSHAKE_REPLY,         
+                MessageType.HANDSHAKE_REPLY,
+                this.name,
+            )
+            event.source?.postMessage(channelMessage, { targetOrigin: '*', transfer: [remotePort] });
         }
-        if (type !== MessageType.HANDSHAKE) {
-            this.logger.warn('非握手消息', event.data);
-            return;
-        }
-        if (!source) {
-            this.logger.error('来源不明的握手, 已拒绝!', event.data);
-            return;
-        }
-        if (this.channels.has(source)) {
-            this.logger.error('当前 client 已握手!', source);
-        }
-        const ports: ChannelPorts = {
-            clientPort,
-            remotePort
-        }
-        clientPort.onmessage = this.onMessage;
-
-        this.channels.set(source, ports)        
-
-        const channelMessage: ChannelMessage<string> = messageBuilder(
-            MessageType.HANDSHAKE_REPLY,
-            MessageType.HANDSHAKE_REPLY,
-            this.name,
-        )
-        event.source?.postMessage(channelMessage, { targetOrigin: '*', transfer: [remotePort] });
     }
 
-    broadcast<T>(message: T) {
+    broadcast<T>(eventName: string, payload: T) {
+        const message: MessageProtocol<T> = {
+            type: eventName,
+            payload
+        }
         const channelMessage: ChannelMessage<T> = messageBuilder(
             MessageType.BROADCAST,
             message,
             this.name,
         )
+        this.broadcastMessage(channelMessage);
+    }
+
+    private broadcastMessage<T>(message: ChannelMessage<T>) {
         for (const [_, ports] of this.channels) {
-            ports.remotePort.postMessage(channelMessage);
+            ports.remotePort.postMessage(message);
         }
     }
 
-    sendTo<T>(message: T, target: string) {
+    multicast<T>(groupName: string, eventName: string, payload: T) {
+        const message: MessageProtocol<T> = {
+            type: eventName,
+            group: groupName,
+            payload
+        }
+        const channelMessage: ChannelMessage<T> = messageBuilder(
+            MessageType.BROADCAST,
+            message,
+            this.name,
+        )
+        this.multicastMessage(groupName, channelMessage);
+    }
+
+    private multicastMessage<T>(groupName: string, message: ChannelMessage<T>) {
+        const groupChannels = this.groupChannels.get(groupName);
+        groupChannels.forEach(channel => {
+            channel.remotePort.postMessage(message);
+        })
+    }
+
+    sendTo<T>(eventName: string, payload: T, target: string) {
         if (!this.channels.has(target)) {
             this.logger.error(`${target} 接收方不存在!`);
         }
-        const channelPorts = this.channels.get(target);
+
+        const message: MessageProtocol<T> = {
+            type: eventName,
+            payload
+        }
         const channelMessage: ChannelMessage<T> = messageBuilder(
             MessageType.UNICAST,
             message,
             this.name,
             target
         )
-        channelPorts.remotePort.postMessage(channelMessage)
+        this.sendMessage(channelMessage, target);
+    }
+
+    private sendMessage<T>(messsage: ChannelMessage<T>, target: string) {
+        const channelPorts = this.channels.get(target);
+        channelPorts.remotePort.postMessage(messsage)        
     }
 }

@@ -7,5 +7,6 @@ export var MessageType;
     MessageType["BROADCAST"] = "@neural-channel/broadcast";
     MessageType["UNICAST"] = "@neural-channel/unicast";
     MessageType["UNICAST_REQUEST"] = "@neural-channel/unicast-request";
+    MessageType["MULTICAST_REQUEST"] = "@neural-channel/multicast-request";
 })(MessageType || (MessageType = {}));
 //# sourceMappingURL=type.js.map

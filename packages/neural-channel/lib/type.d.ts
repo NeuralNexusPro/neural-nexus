@@ -1,11 +1,12 @@
 export type MessageHandler = (data: any) => void;
 export type ChannelStore = Map<string, ChannelPorts>;
+export type ChannelStores = Map<string, ChannelPorts[]>;
 export type Master = 'master';
 export interface ChannelMessage<T> extends MessageProtocol<T> {
     source: string;
     target?: string;
-    type: string;
     timestamp?: number;
+    crossFrame?: boolean;
     id: string;
 }
 export declare enum MessageType {
@@ -15,13 +16,13 @@ export declare enum MessageType {
     BROADCAST_REQUEST = "@neural-channel/broadcast-request",
     BROADCAST = "@neural-channel/broadcast",
     UNICAST = "@neural-channel/unicast",
-    UNICAST_REQUEST = "@neural-channel/unicast-request"
+    UNICAST_REQUEST = "@neural-channel/unicast-request",
+    MULTICAST_REQUEST = "@neural-channel/multicast-request"
 }
 export interface MessageProtocol<T> {
+    type: string;
     payload: T;
-}
-export interface RegisterOptions {
-    onMessage?: MessageHandler;
+    group?: string;
 }
 export interface ManagerOptions {
     enableLogging?: boolean;

@@ -1,13 +1,13 @@
 import { MessageType } from '../type';
 import { CHANNEL_MANAGER_SYMBOL } from '../master/manager';
-import { messageBuilder } from '../message/message';
+import { messageBuilder, messageParser } from '../message/message';
 import { logger } from '../utils/log';
 export default class ChannelClient {
     constructor(name, options) {
         this.enableLogging = false;
         this.onMasterMessage = (event) => {
             const { data } = event;
-            const { type, payload } = data;
+            const { type, payload } = messageParser(data.payload);
             if (!this.eventMap.has(type))
                 console.warn(`消息 ${type} 不存在可处理逻辑!`);
             const handlers = this.eventMap.get(type);
@@ -15,19 +15,39 @@ export default class ChannelClient {
                 handler(payload);
             });
         };
-        this.sendTo = (message, target) => {
+        this.send = (eventName, payload) => {
             if (!this.master) {
                 this.logger.error('请先执行 handshake!');
                 return;
             }
+            const message = {
+                type: eventName,
+                payload
+            };
+            const channelMessage = messageBuilder(MessageType.UNICAST_REQUEST, message, this.name);
+            this.master.postMessage(channelMessage);
+        };
+        this.sendTo = (eventName, payload, target) => {
+            if (!this.master) {
+                this.logger.error('请先执行 handshake!');
+                return;
+            }
+            const message = {
+                type: eventName,
+                payload
+            };
             const channelMessage = messageBuilder(MessageType.UNICAST_REQUEST, message, this.name, target);
             this.master.postMessage(channelMessage);
         };
-        this.broadcast = (message) => {
+        this.broadcast = (eventName, payload) => {
             if (!this.master) {
                 this.logger.error('请先执行 handshake!');
                 return;
             }
+            const message = {
+                type: eventName,
+                payload
+            };
             const channelMessage = messageBuilder(MessageType.BROADCAST_REQUEST, message, this.name);
             this.master.postMessage(channelMessage);
         };
@@ -44,6 +64,7 @@ export default class ChannelClient {
         };
         this.name = name;
         this.enableLogging = options.enableLogging || false;
+        this.group = options.group;
         this.logger = logger(name, this.enableLogging);
     }
     on(type, callback) {
@@ -56,17 +77,19 @@ export default class ChannelClient {
         }
     }
     handshake() {
-        if (window[CHANNEL_MANAGER_SYMBOL]) {
-            const master = window[CHANNEL_MANAGER_SYMBOL];
-            this.master = master.getChannelPort();
-            if (this.master) {
-                this.master.onmessage = this.onMasterMessage;
+        const self = this;
+        this.eventListener = (event) => {
+            if (event instanceof CustomEvent) {
+                const detail = event.detail;
+                const { type, payload } = detail;
+                switch (type) {
+                    case MessageType.HANDSHAKE_REPLY: {
+                        self.master = payload.port;
+                        self.master.onmessage = self.onMasterMessage;
+                    }
+                }
             }
-        }
-        else {
-            const data = messageBuilder(MessageType.HANDSHAKE, MessageType.HANDSHAKE, this.name);
-            const self = this;
-            this.eventListener = (event) => {
+            else {
                 const { type } = event.data;
                 switch (type) {
                     case MessageType.HANDSHAKE_REPLY: {
@@ -75,11 +98,37 @@ export default class ChannelClient {
                         self.master.onmessage = self.onMasterMessage;
                     }
                 }
-            };
+            }
+        };
+        const data = messageBuilder(MessageType.HANDSHAKE, {
+            name: this.name,
+            group: this.group
+        }, this.name);
+        if (window[CHANNEL_MANAGER_SYMBOL]) {
+            window.addEventListener(MessageType.HANDSHAKE, this.eventListener);
+            const event = new CustomEvent(MessageType.HANDSHAKE, {
+                detail: data
+            });
+            window.dispatchEvent(event);
+        }
+        else {
             window.addEventListener('message', this.eventListener);
             window.postMessage(data, "*");
         }
         return this.disconnect;
+    }
+    multicast(groupName, eventName, payload) {
+        if (!groupName) {
+            this.logger.error('组播必须设定传递的分组!');
+            return;
+        }
+        const message = {
+            type: eventName,
+            payload,
+            group: groupName
+        };
+        const data = messageBuilder(MessageType.MULTICAST_REQUEST, message, this.name);
+        this.master.postMessage(data);
     }
 }
 //# sourceMappingURL=client.js.map

@@ -1,6 +1,7 @@
 export default class ChannelClient {
     master: MessagePort | undefined;
     name: string;
+    group?: string;
     private enableLogging;
     eventMap: Map<string, Function[]>;
     eventListener: (event: MessageEvent) => void;
@@ -8,8 +9,10 @@ export default class ChannelClient {
     constructor(name: string, options: any);
     on(type: string, callback: (...any: any[]) => void): void;
     private onMasterMessage;
-    sendTo: <T>(message: T, target?: string) => void;
-    broadcast: <t>(message: t) => void;
+    send: <T>(eventName: string, payload: T) => void;
+    sendTo: <T>(eventName: string, payload: T, target?: string) => void;
+    broadcast: <t>(eventName: string, payload: t) => void;
     disconnect: () => void;
     handshake(): () => void;
+    multicast<T>(groupName: string, eventName: string, payload: T): void;
 }
