@@ -86,7 +86,8 @@ export default class IframeReconciler extends Reconciler {
 
   destroy () {
     // unmount hook
-
+    const destroy = super.destroy;
+    let timer;
     this.iframeNode &&
       (this.iframeNode.contentWindow as Window)?.postMessage(
         {
@@ -95,9 +96,27 @@ export default class IframeReconciler extends Reconciler {
         },
         this.iframeNode.src
       );
-      
-    this.channelManger.disconnect(this.view.code);
-    super.destroy();
+    
+    const unmountReply = function(event: MessageEvent) {
+      const { type, payload } = event.data;
+      switch(type) {
+        case ChannelLifecycleMessageType.PAGE_UNMOUNT_CONFIRM: {
+          clearTimeout(timer);
+          window.removeEventListener('message', unmountReply);
+          this.channelManger.disconnect(this.view.code);
+          destroy();
+        }
+        case ChannelLifecycleMessageType.PAGE_UNMOUNT_STOP: {
+          clearTimeout(timer);
+        }
+      }
+    }
+    timer = window.setTimeout(() => {
+      window.removeEventListener('message', unmountReply);
+      this.channelManger.disconnect(this.view.code);
+      super.destroy();
+    }, 1000)    
+    window.addEventListener("message", unmountReply);
   }
 
   restart () {

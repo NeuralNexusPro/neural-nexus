@@ -8,5 +8,7 @@ export enum ChannelLifecycleMessageType {
   PAGE_ACTIVE = '@lifecycle/page_active',  
   PAGE_UNACTIVE = '@lifecycle/page_unactive',
   PAGE_UNMOUNT = '@lifecycle/page_unmount',
+  PAGE_UNMOUNT_CONFIRM = '@lifecycle/page_unmount_confirm',  
+  PAGE_UNMOUNT_STOP = '@lifecycle/page_unmount_stop',    
   PAGE_UPDATE = '@lifecycle/page_update'
 }

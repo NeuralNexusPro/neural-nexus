@@ -54,6 +54,8 @@ export default class ChannelClient {
             this.master.postMessage(channelMessage);
         };
         this.disconnect = () => {
+            this.eventMap.clear();
+            this.master = undefined;
             this.send(MessageType.DISCONNECT, MessageType.DISCONNECT);
         };
         this.name = name;
