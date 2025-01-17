@@ -9,7 +9,7 @@ export const messageBuilder = function<T> (type: string, payload: T, source: str
     source,
     timestamp: new Date().getTime(),
     id: uuid.v4(),
-    crossFrame: window[CHANNEL_MANAGER_SYMBOL],
+    crossFrame: !!window[CHANNEL_MANAGER_SYMBOL],
     target
   }
 }

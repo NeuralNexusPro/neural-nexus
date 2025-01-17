@@ -7,6 +7,7 @@ import { messageBuilder, messageParser } from '../message/message';
 export const CHANNEL_MANAGER_SYMBOL = Symbol('ChannelManager');
 export default class MessageChannelManager {
     private channels: ChannelStore = new Map();
+    private channelIndex = new Map<string, string[]>();
     private groupChannels: ChannelStores = new Map();
     private isMainWindow: boolean = false;
     private readonly enableLogging: boolean = false;
@@ -86,7 +87,7 @@ export default class MessageChannelManager {
         }
         const channel = this.channels.get(channelName);
 
-        return channel.remotePort;
+        return channel.clientPort;
     }
 
 
@@ -125,8 +126,8 @@ export default class MessageChannelManager {
     
     private handleClientHandshake = (event: MessageEvent | CustomEvent): void =>  {
         if (event instanceof CustomEvent) {
-            const { id, type, source, payload } = event.detail as ChannelMessage<{name: string, group: string}>;
-            if (this.bufferQueue.has(id)) {
+            const { id: msgId, type, source, payload } = event.detail as ChannelMessage<{name: string, id: string, group: string}>;
+            if (this.bufferQueue.has(msgId)) {
                 this.logger.warn('重复消息，已过滤', event.detail);
                 return;
             }
@@ -139,9 +140,9 @@ export default class MessageChannelManager {
                 return;
             }
             if (this.channels.has(source)) {
-                this.logger.error('当前 client 已握手!', source);
+                this.logger.info('当前 client 已握手!', source);
             }
-            const { group } = payload;
+            const { group, id, name } = payload;
             const messageChannel = new MessageChannel();
             const clientPort = messageChannel.port1;
             const remotePort = messageChannel.port2;
@@ -150,8 +151,14 @@ export default class MessageChannelManager {
                 remotePort
             }
             clientPort.onmessage = this.onMessage;
-    
-            this.channels.set(source, ports)        
+            if (this.channelIndex.has(name)) {
+                const index = this.channelIndex.get(name);
+                this.channelIndex.set(name, [ ...index, id ])
+            } else {
+                this.channelIndex.set(name, [ id ])
+            }
+            this.channels.set(id, ports);
+
             if (group) {
                 if (this.groupChannels.has(group)) {
                     const groupChannels = this.groupChannels.get(group)
@@ -173,9 +180,9 @@ export default class MessageChannelManager {
             });
             window.dispatchEvent(handshakeReplyEvent);
         } else {
-            const { id, type, source } = event.data as ChannelMessage<{name: string, group: string}>;
+            const { id: msgId, type, source, payload } = event.data as ChannelMessage<{name: string, id: string, group: string}>;
             // already in buffer queue
-            if (this.bufferQueue.has(id)) {
+            if (this.bufferQueue.has(msgId)) {
                 this.logger.warn('重复消息，已过滤', event.data);
                 return;
             }
@@ -190,6 +197,7 @@ export default class MessageChannelManager {
             if (this.channels.has(source)) {
                 this.logger.error('当前 client 已握手!', source);
             }
+            const { group, id, name } = payload;
             const messageChannel = new MessageChannel();
             const clientPort = messageChannel.port1;
             const remotePort = messageChannel.port2;
@@ -198,9 +206,21 @@ export default class MessageChannelManager {
                 remotePort
             }
             clientPort.onmessage = this.onMessage;
-    
-            this.channels.set(source, ports)        
-    
+            if (this.channelIndex.has(name)) {
+                const index = this.channelIndex.get(name);
+                this.channelIndex.set(name, [ ...index, id ])
+            } else {
+                this.channelIndex.set(name, [ id ])
+            }
+            this.channels.set(id, ports)        
+            if (group) {
+                if (this.groupChannels.has(group)) {
+                    const groupChannels = this.groupChannels.get(group)
+                    this.groupChannels.set(group, [ ...groupChannels, ports ])
+                } else {
+                    this.groupChannels.set(group, [ ports ])
+                }
+            }
             const channelMessage: ChannelMessage<string> = messageBuilder(
                 MessageType.HANDSHAKE_REPLY,         
                 MessageType.HANDSHAKE_REPLY,
@@ -225,7 +245,7 @@ export default class MessageChannelManager {
 
     private broadcastMessage<T>(message: ChannelMessage<T>) {
         for (const [_, ports] of this.channels) {
-            ports.remotePort.postMessage(message);
+            ports.clientPort.postMessage(message);
         }
     }
 
@@ -246,15 +266,15 @@ export default class MessageChannelManager {
     private multicastMessage<T>(groupName: string, message: ChannelMessage<T>) {
         const groupChannels = this.groupChannels.get(groupName);
         groupChannels.forEach(channel => {
-            channel.remotePort.postMessage(message);
+            channel.clientPort.postMessage(message);
         })
     }
 
     sendTo<T>(eventName: string, payload: T, target: string) {
-        if (!this.channels.has(target)) {
+        if (!this.channelIndex.has(target)) {
             this.logger.error(`${target} 接收方不存在!`);
+            return;
         }
-
         const message: MessageProtocol<T> = {
             type: eventName,
             payload
@@ -269,7 +289,16 @@ export default class MessageChannelManager {
     }
 
     private sendMessage<T>(messsage: ChannelMessage<T>, target: string) {
-        const channelPorts = this.channels.get(target);
-        channelPorts.remotePort.postMessage(messsage)        
+        if (!this.channelIndex.has(target)) {
+            this.logger.error('通信接受方不存在!', target);
+            return;
+        }
+        const channelNames = this.channelIndex.get(target);
+        channelNames.forEach(name => {
+            const channel = this.channels.get(name);
+            if (channel) {
+                channel.clientPort.postMessage(messsage)        
+            }
+        })
     }
 }

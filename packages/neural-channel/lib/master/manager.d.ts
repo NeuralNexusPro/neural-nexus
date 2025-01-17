@@ -2,6 +2,7 @@ import { ManagerOptions } from '../type';
 export declare const CHANNEL_MANAGER_SYMBOL: unique symbol;
 export default class MessageChannelManager {
     private channels;
+    private channelIndex;
     private groupChannels;
     private isMainWindow;
     private readonly enableLogging;

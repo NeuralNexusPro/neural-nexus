@@ -34,7 +34,11 @@ export default class IframeReconciler extends Reconciler {
       ChannelLifecycleMessageType.PAGE_LOADING_START,      
       this.view.code
     );
-    this.iframeNode = (this.view.mountNode as HTMLElement).childNodes[0] as HTMLIFrameElement;
+    const frame = document.createElement('iframe')
+    frame.name = this.view.data.title || ''
+    frame.src = this.view.data.url;
+    this.view.mountNode.appendChild(frame)
+    this.iframeNode = frame;
     const onLoad = () => {
       this.channelManger.trigger(ChannelLifecycleMessageType.PAGE_LOADING_FINISH);
       // mount hook

@@ -1,13 +1,15 @@
 import { MessageType } from '../type';
 import { CHANNEL_MANAGER_SYMBOL } from '../master/manager';
+import * as uuid from 'uuid';
 import { messageBuilder, messageParser } from '../message/message';
 import { logger } from '../utils/log';
 export default class ChannelClient {
     constructor(name, options) {
         this.enableLogging = false;
+        this.eventMap = new Map();
         this.onMasterMessage = (event) => {
             const { data } = event;
-            const { type, payload } = messageParser(data.payload);
+            const { type, payload } = messageParser(data);
             if (!this.eventMap.has(type))
                 console.warn(`消息 ${type} 不存在可处理逻辑!`);
             const handlers = this.eventMap.get(type);
@@ -52,15 +54,7 @@ export default class ChannelClient {
             this.master.postMessage(channelMessage);
         };
         this.disconnect = () => {
-            if (window[CHANNEL_MANAGER_SYMBOL]) {
-                const master = window[CHANNEL_MANAGER_SYMBOL];
-                master.disconnect(this.name);
-            }
-            else {
-                const data = messageBuilder(MessageType.DISCONNECT, MessageType.DISCONNECT, this.name);
-                window.postMessage(data, "*");
-                window.removeEventListener("message", this.eventListener);
-            }
+            this.send(MessageType.DISCONNECT, MessageType.DISCONNECT);
         };
         this.name = name;
         this.enableLogging = options.enableLogging || false;
@@ -99,13 +93,16 @@ export default class ChannelClient {
                     }
                 }
             }
+            this.logger.info('handshake succuess!');
+            window.removeEventListener("message", this.eventListener);
         };
         const data = messageBuilder(MessageType.HANDSHAKE, {
             name: this.name,
+            id: `${this.name}-${uuid.v4()}`,
             group: this.group
         }, this.name);
         if (window[CHANNEL_MANAGER_SYMBOL]) {
-            window.addEventListener(MessageType.HANDSHAKE, this.eventListener);
+            window.addEventListener(MessageType.HANDSHAKE_REPLY, this.eventListener);
             const event = new CustomEvent(MessageType.HANDSHAKE, {
                 detail: data
             });
@@ -113,7 +110,7 @@ export default class ChannelClient {
         }
         else {
             window.addEventListener('message', this.eventListener);
-            window.postMessage(data, "*");
+            window.parent.postMessage(data, "*");
         }
         return this.disconnect;
     }

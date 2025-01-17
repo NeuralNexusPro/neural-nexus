@@ -78,6 +78,7 @@ export default class View {
         storagePath,
         urlQuery
       },
+      code: this.code,
       po: null,
       async onCreate () {
         this.po.create();
