@@ -108,13 +108,17 @@ export default class MessageChannelManager {
     }
 
     public disconnect(channelName: string): void {
-        const channelPorts = this.channels.get(channelName);
-        if (channelPorts) {
-            channelPorts.clientPort.close();
-            channelPorts.remotePort.close();
-            this.channels.delete(channelName);
-            this.logger.info(`Channel "${channelName}-${this.name}" disconnect`);
-        }
+        const channelNames = this.channelIndex.get(channelName) || [];
+        channelNames.forEach(channelName => {
+            const channel = this.channels.get(channelName);
+            if (channel) {
+                channel.clientPort.close();
+                channel.remotePort.close();
+                this.channels.delete(channelName);
+                this.logger.info(`Channel "${channelName}-${this.name}" disconnect`);
+            }
+        })
+        this.channelIndex.delete(channelName);
     }
 
     private handleClientEvent = (eventName: string, payload: any): void => {

@@ -93,6 +93,8 @@ export default class ChannelClient {
   }
 
   disconnect = () => {
+    this.eventMap.clear();
+    this.master = undefined;
     this.send(
       MessageType.DISCONNECT,
       MessageType.DISCONNECT,      
