@@ -1,6 +1,6 @@
 {
   "name": "@neural-nexus/view-manager",
-  "version": "0.0.1-alpha.0.6",
+  "version": "0.0.1-alpha.0.7",
   "description": "",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -21,8 +21,8 @@
   "author": "archersado",
   "license": "MIT",
   "dependencies": {
-    "@neural-nexus/neural-channel": "^0.0.1-alpha.0.6",
-    "@neural-nexus/view-reconciler": "^0.0.1-alpha.0.6",
+    "@neural-nexus/neural-channel": "^0.0.1-alpha.0.7",
+    "@neural-nexus/view-reconciler": "^0.0.1-alpha.0.7",
     "llpage": "^1.1.5"
   },
   "devDependencies": {
