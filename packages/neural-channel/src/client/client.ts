@@ -29,6 +29,12 @@ export default class ChannelClient {
     }
   }
 
+  remove(eventName: string) {
+    if (this.eventMap.has(eventName)) {
+        this.eventMap.delete(eventName)
+    }
+}
+
   private onMasterMessage = (event: MessageEvent) => {
     const { data } = event;
     const { type, payload } = messageParser(data)

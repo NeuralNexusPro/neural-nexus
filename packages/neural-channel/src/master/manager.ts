@@ -100,6 +100,12 @@ export default class MessageChannelManager {
         }
     }
 
+    remove(eventName) {
+        if (this.masterEventMap.has(eventName)) {
+            this.masterEventMap.delete(eventName)
+        }
+    }
+
     trigger<T>(eventName: string, payload?: T) {
         if (this.masterEventMap.has(eventName)) {
             const listeners = this.masterEventMap.get(eventName);
