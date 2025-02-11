@@ -1,0 +1,126 @@
+.shellheader {
+  &-container {
+    font-size: 28px;
+    height: 56px;
+    line-height: 56px;
+    display: flex;
+    flex-direction: row;
+    padding: 0px 0px;
+    box-sizing: border-box;
+    justify-content: space-between;
+    align-items: center;
+    transition: padding 300ms linear;
+    position: relative;
+    .icon {
+      padding: 2px;
+      border-radius: 2px;
+      cursor: pointer;
+    }
+    .icon-click:hover {
+      background-color: #c2d2ff;
+    }
+    .icon-active {
+      background-color: #c2d2ff;
+    }
+    .icon-click:active {
+      background-color: #99b4ff;
+    }
+    .left-menu {
+      height: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      .logo {
+        width: fit-content;
+        height: 24px;
+      }
+    }
+    .right-menu,
+    .middle-menu {
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      sup {
+        min-width: 18px;
+        height: 18px;
+        background: #ea4646;
+        color: #ffffff;
+        font-weight: 700;
+        font-size: 12px;
+        line-height: 18px;
+        text-align: center;
+        border-radius: 9px;
+        user-select: none;
+        position: absolute;
+        right: -8px;
+        top: 5px;
+      }
+    }
+    .middle-menu {
+      .icon {
+        transition: left 0.5s ease-out;
+        position: relative;
+        left: 47.5px;
+      }
+    }
+
+    .middle-menu:hover {
+      padding: 0 30px;
+      cursor: pointer;
+      .icon {
+        left: 0;
+      }
+      .product-name {
+        left: 0;
+        opacity: 1;
+      }
+    }
+    .middle-menu-hover {
+      padding: 0 30px;
+      cursor: pointer;
+      .icon {
+        left: 0;
+      }
+      .product-name {
+        opacity: 1;
+        left: 0;
+      }
+    }
+    .product-name {
+      position: relative;
+      font-size: 18px;
+      padding-left: 5px;
+      background: linear-gradient(36.878089184389815deg, #b500ff 0%, #1143ff 50%, #00f7ff 100%);
+      font-family: DingTalk, DingTalk;
+      -webkit-background-clip: text; /* 背景剪切到文字 */
+      -webkit-text-fill-color: transparent; /* 文字填充颜色透明 */
+      background-clip: text; /* 标准属性，但在老版本的浏览器中可能不支持 */
+      color: transparent; /* 文字颜色透明 */
+      font-style: normal;
+      left: 47.5px;
+      opacity: 0;
+      transition: opacity 0.5s ease-out, left 0.5s ease-out;
+      img {
+        height: 22px;
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 600px) {
+  .shellheader {
+    &-container {
+      padding: 0 16px;
+    }
+  }
+}
+@media screen and (max-width: 599px) {
+  .shellheader {
+    &-container {
+      padding: 0 8px;
+    }
+  }
+}

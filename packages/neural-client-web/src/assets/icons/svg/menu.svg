@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="30px" height="30px" viewBox="0 0 30 30" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>ic_菜单</title>
+    <g id="ic_菜单" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect id="矩形备份-27" x="0" y="0" width="30" height="30" rx="3"></rect>
+        <g id="ic_目录" transform="translate(8.116586, 8.563170)" stroke="#425792" stroke-linecap="square" stroke-linejoin="round" stroke-width="2">
+            <line x1="0" y1="0.5" x2="14" y2="0.5" id="直线-2"></line>
+            <line x1="0" y1="6.5" x2="14" y2="6.5" id="直线-2备份"></line>
+            <line x1="0" y1="12.5" x2="14" y2="12.5" id="直线-2备份-2"></line>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,4 @@
+/* 覆盖css变量，更改主题 */
+:root {
+  --el-primary-color: #416cff;
+}

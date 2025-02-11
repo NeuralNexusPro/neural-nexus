@@ -15,6 +15,7 @@ export default class MessageChannelManager {
     private onMessage;
     getChannelPort: (channelName: string) => MessagePort;
     on(eventName: string, callback: (...any: any[]) => void): void;
+    remove(eventName: any): void;
     trigger<T>(eventName: string, payload?: T): void;
     disconnect(channelName: string): void;
     private handleClientEvent;

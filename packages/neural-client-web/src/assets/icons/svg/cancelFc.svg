@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="30px" height="30px" viewBox="0 0 30 30" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>全屏/取消全屏</title>
+    <g id="全屏/取消全屏" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect id="矩形" x="0" y="0" width="30" height="30" rx="4"></rect>
+        <g id="ic_全屏备份" transform="translate(7.000000, 7.000000)" fill="#425792" stroke="#425792" stroke-linejoin="round">
+            <polygon id="路径" transform="translate(3.500000, 3.500000) scale(-1, -1) translate(-3.500000, -3.500000) " points="1.45912455e-13 7 1.45912455e-13 3.06803825e-15 7 3.06803825e-15"></polygon>
+            <polygon id="路径备份" points="9 16 9 9 16 9"></polygon>
+        </g>
+    </g>
+</svg>

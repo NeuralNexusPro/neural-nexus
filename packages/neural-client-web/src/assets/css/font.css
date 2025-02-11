@@ -1,0 +1,16 @@
+/*
+* 中英文字型建议顺序如下：
+* （Mac系统）“苹方”、“华文细黑”、“Helvetica Neue”、“Helvetica”；
+* （Windows系统）“微软雅黑”、“黑体”、“宋体”、“Arial”
+* Win中文：优先使用微软雅黑，如果没有使用黑体、宋体
+* Mac OS X—中文：优先使用苹方，如果没有使用华文细黑
+* Win西文：优先使用Arial
+* Mac OS X—西文：优先使用Helvetica Neue，没有使用Helvetica
+*/
+/* // iso系统 */
+@fontPF_Reg: 'PingFangSC-Regular', STXihei, 'Helvetica Neue', Helvetica;
+@fontPF_Med: 'PingFangSC-Medium', STXihei, 'Helvetica Neue', Helvetica;
+@fontIosEng: 'Helvetica Neue', Helvetica;
+/* // windows系统 */
+@fontYaHei: 'Microsoft YaHei', Helvetica, Arial, sans-serif;
+@fontWinEng: Arial;

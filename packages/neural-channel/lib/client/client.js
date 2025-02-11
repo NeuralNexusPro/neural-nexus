@@ -72,6 +72,11 @@ export default class ChannelClient {
             this.eventMap.set(type, [...currentListeners, callback]);
         }
     }
+    remove(eventName) {
+        if (this.eventMap.has(eventName)) {
+            this.eventMap.delete(eventName);
+        }
+    }
     handshake() {
         const self = this;
         this.eventListener = (event) => {

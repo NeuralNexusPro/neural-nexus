@@ -1,0 +1,173 @@
+// Primary Colors 主调色彩系统
+$EnnWKB1: #eff3ff;
+$EnnWKB2: #c2d2ff;
+$EnnWKB3: #7097ff;
+$EnnWKB4: #4b7afa;
+$EnnWKB5: #4068d4;
+$EnnWKB6: #3455ad;
+$EnnWKB7: #264480;
+$EnnWKB8: #192e57;
+// Grayscale 灰色系统
+$EnnWKN0: #fbfbfb;
+$EnnWKN1: #f6f7fb;
+$EnnWKN2: #f2f3f5;
+$EnnWKN3: #ebecf0;
+$EnnWKN4: #dcdde0;
+$EnnWKN5: #c8c9cc;
+$EnnWKN6: #969799;
+$EnnWKN7: #646566;
+$EnnWKN8: #323233;
+$EnnWKN9: #000000;
+// Semantic Colors 语义色系统
+$EnnWKPositive: #39ab4c;
+$EnnWKNeutral: #969799;
+$EnnWKNegative: #ea4646;
+$EnnWKAlert: #ffa900;
+$EnnWKInformation: #4068d4;
+$EnnWKPositiveBg: #ebf6ed;
+$EnnWKNeutralBg: #f4f4f4;
+$EnnWKNegativeBg: #fcecec;
+$EnnWKAlertBg: #fff6e5;
+$EnnWKInformativeBg: #ebeffa;
+// Brand-Highlight (品牌色-主色）
+$EnnWKBrand: $EnnWKB5; // 品牌色
+$EnnWKHoverAndInteractive: $EnnWKB6; // 品牌色hover色
+$EnnWKSelectedAndActive: $EnnWKB7; //品牌色的选中/激活
+// Shell Header Bar (品牌色-延伸色）
+$EnnWKShellBg: $EnnWKB7; // 品牌色的引申色，通常是通常 比品牌色深，用于系统顶栏
+$EnnWKShellButtonBgHover: #1c3362; // 顶栏按钮的背景悬浮
+$EnnWkShellButtonBgSelected: $EnnWKB8; // 顶栏按钮的背景选中
+// Brand-Alternative (品牌色-浅色辅色）
+$EnnWKShellButton: #c2cadb; // icon色
+$EnnWKLineItemSelected: $EnnWKB1; // 表格，列表，下拉选择的选中色
+$EnnWKLineItemSelectedHover: #e5e9f5; // 表格，列表，下拉选择的选中色 背景悬浮
+$EnnWKStandardButtonBg: $EnnWKB1; // 二级按钮的背景填充
+// Containers (容器背景色）
+$EnnWKBase: #ffffff; // 纯白基准色、白色
+$EnnWKAppBg: $EnnWKN1; // 应用页面背景
+$EnnWKHomeBg: linear-gradient(180deg, $EnnWKB1 0%, $EnnWKN1 100%); // 首页背景
+$EnnWKLineItemHover: $EnnWKN1; // 卡片、表格、列表、下拉 选项的hover效果色
+$EnnWKTableColumnHeaderBg: $EnnWKN2; // 表头背景填充色
+$EnnWKTableGroupBg: $EnnWKN2; // 表格分组背景色
+// Borders (描边）
+$EnnWKInputBorder: $EnnWKN5; // 输入框外描边
+$EnnWKContainerBorder: $EnnWKN1; // 容器间的分割线
+$EnnWKInlineBorder: $EnnWKN3; // 表格列表等分割线，容器内的分割线
+// Text Titles (主文本/主标题）
+$EnnWKTextTitle: $EnnWKN8; // 主要/一级文本，标题
+// Sub -text Sub-titles (副文本，副标题））
+$EnnWKSubtitleLabel: $EnnWKN7; // 副标题，表单label,说明性icon
+$EnnWKPrompt: $EnnWKN5; // 占位提示文本
+// Accent Colors（辅助色）
+$EnnWKAccent1: #fa9356;
+$EnnWKAccent2: #fad337;
+$EnnWKAccent3: #36cbcb;
+$EnnWKAccent4: #44c2fd;
+$EnnWKAccent5: #4b7afa;
+$EnnWKAccent6: #3455ad;
+$EnnWKAccent7: #4dcb73;
+$EnnWKAccent8: #7a79ff;
+$EnnWKAccent9: #f57062;
+
+// mainContainer
+$siderBarboxShadowColor: transparentize($EnnWKB7, (1-0.08));
+// $siderBarboxShadowColor: rgba(38, 68, 128, 0.08); // $EnnWKB7 0.08
+
+// HeadNavBar
+
+// sidebar
+$menuText: #bfcbd9;
+$menuActiveText: #409eff;
+$subMenuActiveText: #f4f4f5; // https://github.com/ElemeFE/element/issues/12951
+
+$menuBg: #304156;
+$menuHover: #eaeefa;
+
+$subMenuBg: #1f2d3d;
+$subMenuHover: #001528;
+
+$sideBarWidth: 210px;
+
+:export {
+  ennwkb5: $EnnWKB5;
+  menuhover: $menuHover;
+}
+
+$EnnWKProductName: $EnnWKBase;
+
+$EnnWKBorderColor: #ebedf0; // 间隔线颜色
+
+// Headlines（大标题）
+.H1 {
+  font-size: 36px;
+}
+.H2 {
+  font-size: 24px;
+}
+.H3 {
+  font-size: 20px;
+}
+.H4 {
+  font-size: 18px;
+}
+.H5 {
+  font-size: 16px;
+}
+.H6 {
+  font-size: 14px;
+}
+// Large Text（大文本）
+.T1 {
+  font-size: 16px;
+}
+// Medium Text（中文本）
+.T2 {
+  font-size: 14px;
+}
+// Small Text（小文本）
+.T3 {
+  font-size: 12px;
+}
+// Display Text（展示文本）
+.D1 {
+  font-size: 48px;
+}
+.D2 {
+  font-size: 36px;
+}
+.D3 {
+  font-size: 24px;
+}
+.D4 {
+  font-size: 18px;
+}
+// Shadow（阴影）
+// ● card卡片
+.L1 {
+  box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.06);
+}
+// ● Menu（Dropdown）下拉菜单;
+// ● Floating Footer toolbar 底部操作栏
+.L2 {
+  box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.16);
+}
+// ● Popover 气泡框
+// ● Message Toast 轻提示
+// ● Notification Banner  通知推送
+.L3 {
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.08);
+}
+// ● Dialog 弹窗
+.L4 {
+  box-shadow: 0px 20px 24px 0px rgba(0, 0, 0, 0.08);
+}
+@for $i from 1 through 6 {
+  h#{$i} {
+    @extend .H#{$i};
+  }
+}
+.ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

@@ -1,0 +1,387 @@
+.shellheader {
+  &-container {
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    padding: 0 8px;
+    box-sizing: border-box;
+    justify-content: space-between;
+    align-items: center;
+
+    transition: padding 300ms linear;
+    position: relative;
+    .collapses {
+      cursor: pointer;
+      height: 36px;
+      line-height: 36px;
+      padding: 0 6px;
+      width: 36px;
+      box-sizing: border-box;
+
+      position: absolute;
+      z-index: 999;
+      top: 50%;
+      transform: translateY(-50%);
+      .icon-menu {
+        @extend .D3;
+        color: $EnnWKShellButton;
+      }
+      &:hover,
+      &.selected {
+        background-color: $EnnWKShellButtonBgHover;
+        border-radius: 2px;
+      }
+    }
+    .box-item {
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      &.left-menu {
+        flex-shrink: 1;
+        display: flex;
+        flex-direction: row;
+
+        transition: width 500ms linear;
+        &.hide {
+          // display: none;
+          width: 0;
+          overflow: hidden;
+        }
+        .item {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+
+          &.logoimg {
+            // cursor: pointer;
+            height: 100%;
+            padding: 0 6px;
+            width: 36px;
+            box-sizing: border-box;
+            .iconfont {
+              @extend .D3;
+              color: $EnnWKShellButton;
+            }
+          }
+          &.logoname {
+            padding: 0 16px 0 8px;
+            :deep(.svg-icon) {
+              width: 80px;
+              height: 20px;
+            }
+            > img {
+              height: 20px;
+            }
+          }
+          &.productname {
+            margin-right: 10px;
+            .ptitle {
+              color: $EnnWKProductName;
+              @extend .T1;
+              font-weight: 400;
+              padding: 0 8px 0 16px;
+              box-sizing: border-box;
+              position: relative;
+
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+
+              &::before {
+                content: '';
+                position: absolute;
+                left: 0;
+                height: 16px;
+                width: 1px;
+                top: 50%;
+                transform: translateY(-50%);
+                background-color: rgba(255, 255, 255, 0.24);
+              }
+            }
+
+            .subtitle {
+              cursor: pointer;
+              padding: 0 8px;
+              height: 36px;
+
+              display: flex;
+              flex-direction: row;
+              align-items: center;
+
+              position: relative;
+
+              &:hover,
+              &.selected {
+                background-color: $EnnWKShellButtonBgHover;
+                border-radius: 2px;
+              }
+              .title {
+                color: $EnnWKShellButton;
+                font-weight: 400;
+                // max-width: 140px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                @extend .T2;
+              }
+              .icon-qiehuanfubiaoti {
+                @extend .D3;
+                width: 24px;
+                height: 24px;
+                display: inline-block;
+                color: $EnnWKShellButton;
+              }
+            }
+          }
+        }
+      }
+      &.center-menu {
+        flex: 1;
+        flex-shrink: 1;
+      }
+      &.right-menu {
+        flex-shrink: 2;
+        flex: 1;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        align-items: center;
+
+        .item {
+          position: relative;
+          // padding: 0 10px;
+          height: 36px;
+          display: flex;
+          align-items: center;
+          margin-left: 6px;
+
+          .addItemCur {
+            width: 36px;
+            height: 36px;
+            display: inline-block;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+          }
+          .iconfont {
+            color: $EnnWKShellButton;
+            @extend .T1;
+          }
+          &.hide {
+            display: none;
+          }
+          &:hover,
+          &.selected {
+            background-color: $EnnWKShellButtonBgHover;
+            border-radius: 2px;
+          }
+          &.close {
+            color: $EnnWKShellButton;
+            cursor: pointer;
+            overflow: hidden;
+            text-align: center;
+            box-sizing: border-box;
+            padding: 0;
+            display: inline-block;
+            line-height: 36px;
+            width: 60px;
+            border-radius: 2px;
+            font-size: 14px;
+            &.hidec {
+              display: none;
+            }
+          }
+          &.searchinput {
+            padding: 0;
+            margin-left: 0;
+            width: 0;
+            opacity: 0;
+            // transition: all 300ms linear;
+            // transition: width 300ms linear, opacity 300ms linear;
+            transition: opacity 300ms linear;
+            :deep(.el-input) {
+              border-radius: 0;
+              overflow: hidden;
+              .el-input__inner {
+                height: 36px;
+                background-color: $EnnWKB8;
+                margin-right: 2px;
+                border: none;
+                color: $EnnWKShellButton;
+                min-width: 304px;
+                width: 100%;
+                &::placeholder,
+                &:-ms-input-placeholder,
+                &::-webkit-input-placeholder {
+                  @extend .T2;
+                  font-weight: 400;
+                  color: $EnnWKShellButton;
+                }
+              }
+              .el-input__suffix {
+                margin-right: -5px;
+                .el-input__suffix-inner {
+                  border-color: none;
+                  vertical-align: middle;
+                  .el-icon-circle-close {
+                    vertical-align: middle;
+                    margin-top: -3px;
+                  }
+                  .el-icon-circle-close:before {
+                    content: '' !important;
+                    @extend .D4;
+                  }
+                }
+              }
+              .el-input-group__append {
+                width: 36px;
+                border: none;
+                background-color: $EnnWKB8;
+                border-radius: 0 2px 2px 0;
+                padding: 0 10px;
+                .iconfont {
+                  &.icon-search:before {
+                    vertical-align: middle;
+                  }
+                }
+              }
+            }
+            &.btnInput {
+              border-radius: 2px;
+              background-color: $EnnWKB8;
+              opacity: 1;
+              width: 304px;
+            }
+            &.autowidth {
+              width: 100%;
+              border-radius: 2px;
+              // background-color: $EnnWKB8;
+              :deep(.el-input) {
+                .el-input__inner {
+                  width: 100%;
+                }
+              }
+            }
+          }
+          &.search {
+            width: 36px;
+            padding: 0 10px;
+            margin-left: 0;
+            &.btnInput {
+              background-color: $EnnWKB8;
+              border-radius: 0;
+            }
+          }
+          &.avatar {
+            // padding: 0 6px;
+            cursor: pointer;
+            &::before {
+              content: '';
+              position: absolute;
+              width: 100%;
+              height: 100%;
+              background-color: transparent;
+            }
+
+            :deep(.el-avatar) {
+              color: $EnnWKShellButton;
+              background: transparent;
+              .icon-touxiang:before {
+                @extend .D3;
+              }
+            }
+            :deep(.el-dropdown) {
+              display: flex;
+            }
+          }
+          &.tip-info {
+            position: relative;
+            .tip {
+              min-width: 14px;
+              height: 14px;
+              background: $EnnWKNegative;
+              border-radius: 7px;
+
+              font-size: 10px;
+              font-weight: 400;
+              color: $EnnWKBase;
+
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              align-items: center;
+
+              padding: 0 3px;
+              box-sizing: border-box;
+
+              position: absolute;
+              top: 0;
+              right: -4px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+.el-dropdown {
+  &.Operation {
+    position: absolute;
+    width: 36px;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.5);
+    left: 0;
+  }
+  &.contentRef {
+    position: absolute;
+  }
+  .operationCursor {
+    height: 36px;
+    cursor: pointer;
+    width: 0;
+    background-color: red;
+  }
+}
+
+.el-dropdown-menu {
+  &.el-popper {
+    &.el-popper-enn {
+      @extend .L2;
+      top: 42px !important;
+      // left: -340px !important;
+      // right: 0 !important;
+      border: none !important;
+      padding: 0 !important;
+      margin-right: 16px;
+      // width: 356px;
+      // min-width: 262px;
+    }
+    .box {
+      min-height: 326px;
+      max-height: 772px;
+      // width: 340px; // 356px
+      overflow-y: auto;
+      box-sizing: border-box;
+    }
+    :deep(.popper__arrow) {
+      left: auto !important;
+      right: 8px !important;
+    }
+  }
+}
+@media screen and (min-width: 600px) {
+  .shellheader {
+    &-container {
+      padding: 0 16px;
+    }
+  }
+}
+@media screen and (max-width: 599px) {
+  .shellheader {
+    &-container {
+      padding: 0 8px;
+    }
+  }
+}

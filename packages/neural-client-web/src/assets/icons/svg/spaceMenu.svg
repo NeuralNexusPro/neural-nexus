@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 30 30" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <title>切片</title>
+  <g id="框架" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+    <g id="04_App-Space（应用空间）" transform="translate(-165.000000, -4094.000000)">
+      <g id="编组-46" transform="translate(99.000000, 3958.000000)">
+        <g id="编组-6" transform="translate(0.000000, 71.000000)">
+          <g id="空间栏" transform="translate(23.000000, 57.000000)">
+            <g id="ic_菜单" transform="translate(43.000000, 8.000000)">
+              <rect id="矩形备份-27" fill-opacity="0.51" fill="#D8E2FF" x="0" y="0" width="30" height="30" rx="3"></rect>
+              <g id="ic_目录" transform="translate(8.116586, 8.563170)" stroke="#425792" stroke-linecap="square" stroke-linejoin="round" stroke-width="2">
+                <line x1="0" y1="0.5" x2="14" y2="0.5" id="直线-2"></line>
+                <line x1="0" y1="6.5" x2="14" y2="6.5" id="直线-2备份"></line>
+                <line x1="0" y1="12.5" x2="14" y2="12.5" id="直线-2备份-2"></line>
+              </g>
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

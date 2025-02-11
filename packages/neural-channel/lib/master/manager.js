@@ -197,6 +197,11 @@ export default class MessageChannelManager {
             this.masterEventMap.set(eventName, [callback]);
         }
     }
+    remove(eventName) {
+        if (this.masterEventMap.has(eventName)) {
+            this.masterEventMap.delete(eventName);
+        }
+    }
     trigger(eventName, payload) {
         if (this.masterEventMap.has(eventName)) {
             const listeners = this.masterEventMap.get(eventName);

@@ -1,0 +1,96 @@
+.ennwkbreadcrumbs {
+  height: 100%;
+  width: 100%;
+  margin: 0 25px 0 0;
+  overflow-x: auto;
+  &-ul {
+    margin: 0;
+    padding: 0;
+    height: 56px;
+    // width: 200%;
+    overflow: hidden;
+    list-style: none;
+    li {
+      height: 56px;
+      line-height: 56px;
+      float: left;
+      position: relative;
+      padding-left: 8px;
+      vertical-align: middle;
+      &::before {
+        display: inline-block;
+        content: '/';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 7px;
+        @extend .T2;
+        color: $EnnWKN6;
+      }
+      a {
+        display: inline-block;
+        vertical-align: middle;
+        @extend .T2;
+        color: $EnnWKN6;
+        height: 22px;
+        line-height: 18px;
+        vertical-align: middle;
+
+        padding: 0 8px;
+        max-width: 140px;
+        @extend .ellipsis;
+        &:link {
+          color: $EnnWKN6;
+        }
+        &:visited {
+          color: $EnnWKN6;
+        }
+        &:hover {
+          color: $EnnWKB5;
+        }
+        &:active,
+        &.current-selected {
+          color: $EnnWKB5;
+        }
+      }
+      &:first-of-type {
+        &::before {
+          display: none;
+        }
+      }
+
+      &:last-of-type {
+        a {
+          color: $EnnWKB5;
+        }
+      }
+
+      &.first {
+        padding-left: 0;
+        a {
+          padding: 0 8px 0 0;
+        }
+        &::before {
+          display: none;
+        }
+        &.more {
+          padding: 0 0 0 8px;
+          // margin-right: 8px;
+          .icon-overflow {
+            padding: 10px 8px;
+            cursor: pointer;
+            height: 56px;
+            color: $EnnWKN6;
+            &:hover {
+              color: $EnnWKB5;
+            }
+          }
+          &::before {
+            display: block;
+          }
+        }
+      }
+    }
+  }
+}

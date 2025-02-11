@@ -1,0 +1,58 @@
+.UL-LI {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  min-width: none !important;
+  li {
+    float: left;
+    position: relative;
+    padding-left: 8px;
+    vertical-align: middle;
+    &::before {
+      display: inline-block;
+      content: '/';
+      line-height: 22px;
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 7px;
+      @extend .T2;
+      color: $EnnWKN6;
+    }
+    a {
+      display: inline-block;
+      vertical-align: middle;
+      @extend .T2;
+      color: $EnnWKN6;
+      height: 22px;
+      line-height: 22px;
+      vertical-align: middle;
+
+      padding: 0 8px;
+      max-width: 140px;
+      @extend .ellipsis;
+      &:link {
+        color: $EnnWKN6;
+      }
+      &:visited {
+        color: $EnnWKN6;
+      }
+      &:hover {
+        color: $EnnWKB5;
+      }
+      &:active,
+      &.current-selected {
+        color: $EnnWKB5;
+      }
+    }
+    &:first-of-type {
+      &::before {
+        display: none;
+      }
+    }
+  }
+}
