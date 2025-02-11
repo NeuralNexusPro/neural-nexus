@@ -1,0 +1,75 @@
+@import "@/custom-components/index.scss";
+@import "@/styles/mixins.scss";
+
+$currentClass: loading-card;
+
+:global {
+  :local(.container) {
+    &.#{$prefixCls}-#{$currentClass} {
+      &-pc {
+        width: fit-content;
+        height: fit-content;
+        max-width: 600px;
+        display: flex;
+        align-items: center;
+        // background: #fff;
+        @include session-bubble-style('bot');
+        box-shadow: 0 2px 8px 0 #0000000f;
+        padding: 8px 16px;
+        // border-radius: 8px;
+        .icon {
+          width: 24px;
+          font-size: 24px;
+          margin-right: 12px;
+          color: #11c181;
+          &.loading {
+            color: #4c5cdb;
+            animation-name: rotate;
+            animation-duration: 1s; /* 动画持续时间 */
+            animation-timing-function: linear; /* 动画速度曲线 */
+            animation-iteration-count: infinite; /* 动画重复次数 */
+          }
+        }
+        .text {
+          // font-size: 400;
+          // font-size: 14px;
+          // color: #1c1c1e;
+          // color: #1c1c1e;
+          // line-height: 22px;
+          white-space: pre-line;
+        }
+      }
+      &-mobile {
+        width: 100%;
+        height: fit-content;
+        display: flex;
+        align-items: center;
+        // background: #fff;
+        @include session-bubble-style-mobile('bot');
+        box-shadow: 0 0.01rem 0.06rem 0 #0000000f;
+        padding: 0.24rem;
+        // border-radius: 0.16rem;
+        .icon {
+          width: 0.38rem;
+          font-size: 0.38rem;
+          margin-right: 0.16rem;
+          color: #11c181;
+          &.loading {
+            color: #4c5cdb;
+            animation-name: rotate;
+            animation-duration: 1s; /* 动画持续时间 */
+            animation-timing-function: linear; /* 动画速度曲线 */
+            animation-iteration-count: infinite; /* 动画重复次数 */
+          }
+        }
+        .text {
+          // font-size: 400;
+          // font-size: 0.24rem;
+          // color: #1c1c1e;
+          // line-height: 0.3rem;
+          white-space: pre-line;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,149 @@
+.recorder {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  :global {
+    .recorder-toast {
+      padding: 0.92rem 0.32rem 0.88rem 0.32rem;
+      background-color: #ffffff;
+      border-radius: 0.4rem 0.4rem 0 0;
+      color: #3d3e42;
+    }
+    .recorder-toast-waves {
+      height: 0.96rem;
+      background: #e8f2ff;
+      border-radius: 0.24rem;
+      padding: 0.17rem 0.34rem;
+    }
+    .text-overflow {
+      position: absolute;
+      display: inline-block;
+      background: #fff;
+      box-shadow: 0.16rem 0 0.1rem 0 #fff;
+      z-index: 10;
+    }
+    .recorder-toast-text {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      font-size: 0.32rem;
+      line-height: 0.45rem;
+      height: 1.8rem;
+      max-height: 1.8rem;
+      margin-bottom: 0.81rem;
+      overflow: hidden;
+      text-align: center;
+    }
+    .recorder-toast-prompt {
+      display: flex;
+      justify-content: center;
+      text-align: center;
+      font-size: 0.24rem;
+      color: #9195a1;
+    }
+    .recorder-toast-actions {
+      display: flex;
+      margin: 0.17rem 0;
+      .action {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 1 0;
+        padding: 0.28rem 0;
+      }
+      .icon {
+        font-size: 0.4rem;
+        color: #000000;
+      }
+    }
+    .bars {
+      display: flex;
+      justify-content: center;
+      align-items: end;
+      height: 100%;
+    }
+    .bar {
+      flex: 0 0 0.08rem;
+      background: linear-gradient(#4b7aff 0%, rgba(130, 178, 255, 0) 100%);
+      height: 0.08rem;
+      border-radius: 0.08rem;
+      & :local {
+        animation: wave 2s linear infinite;
+      }
+    }
+    .bar + .bar {
+      margin-left: 0.08rem;
+    }
+
+    @for $item from 1 through 9 {
+      .bar:nth-child(10n + #{$item}) {
+        animation-delay: -#{$item % 10 * 0.2}s;
+      }
+    }
+  }
+  &:global(.--cancel) {
+    :global {
+      .recorder-toast-waves {
+        background-color: transparent;
+      }
+      .recorder-toast-actions {
+        .cancel-action {
+          border-radius: 0.24rem;
+          background-color: #ffece8;
+          cursor: pointer;
+          .icon {
+            color: #f55858;
+          }
+        }
+      }
+      .recorder-toast-prompt {
+        color: #f55858;
+        justify-content: start;
+        .prompt-text {
+          width: 50%;
+        }
+      }
+      .bar {
+        background: linear-gradient(#f55858 0%, rgba(245, 88, 88, 0) 100%);
+      }
+    }
+  }
+  &:global(.--output) {
+    :global {
+      .recorder-toast-waves {
+        background-color: transparent;
+      }
+      .recorder-toast-actions {
+        .output-action {
+          border-radius: 0.24rem;
+          background-color: #e8f2ff;
+          cursor: pointer;
+          .icon {
+            color: #4b7aff;
+          }
+        }
+      }
+      .recorder-toast-prompt {
+        color: #9195a1;
+        justify-content: end;
+        .prompt-text {
+          width: 50%;
+        }
+      }
+    }
+  }
+}
+
+@keyframes wave {
+  0% {
+    height: 0.08rem;
+  }
+  50% {
+    height: 0.45rem;
+  }
+  100% {
+    height: 0.08rem;
+  }
+}

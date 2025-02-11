@@ -1,0 +1,85 @@
+$prefixCls: custom-chat;
+$currentClass: iframe-container;
+
+
+:global {
+    :local(.container) {
+        &.#{$prefixCls}-#{$currentClass} {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            background: #ffffff;
+            box-shadow: 0px 2px 6px 0px #0000000f;
+            border-radius: 4px;
+            min-height: 500px;
+            overflow: hidden;
+            // border: 1px solid #dcdde0ff;
+            & > .title {
+                width: 100%;
+                height: 56px;
+                display: flex;
+                align-items: center;
+                font-weight: 600;
+                font-size: 16px;
+                color: #323233;
+                padding: 0 16px;
+                border-bottom: 1px solid #ebecf0;
+                background-color: #fff;
+            }
+            & > .iframe {
+                width: 100%;
+                flex: 1;
+                height: fit-content;
+                min-height: 600px;
+                max-height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-color: #ffffff;
+                padding: 16px;
+            }
+            & > .preview {
+                position: absolute;
+                top: 20px;
+                right: 8px;
+                z-index: 8;
+                width: 24px;
+                height: 24px;
+                visibility: hidden;
+                cursor: pointer;
+                & > .icon {
+                    font-size: 16px;
+                }
+            }
+            &:hover {
+                & > .preview {
+                    visibility: visible;
+                }
+            }
+            &.full-screen {
+                position: fixed;
+                top: 0;
+                left: 0;
+                z-index: 88;
+                width: 100vw;
+                max-width: 100vw;
+                height: 100vh;
+                min-height: 600px;
+                padding: 24px 30px !important;
+                background-color: #413a3a66;
+                & > .iframe {
+                    height: 100%;
+                }
+                & > .preview {
+                    top: 36px;
+                    right: 36px;
+                }
+            }
+        }
+    }
+    :not(:root):fullscreen::backdrop {
+        background-color: #413a3a66;
+    }
+}

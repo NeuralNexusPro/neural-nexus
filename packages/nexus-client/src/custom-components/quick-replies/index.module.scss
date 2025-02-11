@@ -1,0 +1,102 @@
+@import "@/custom-components/index.scss";
+
+$currentClass: quick-reply;
+
+:global {
+  :local(.quick-reply) {
+    &.#{$prefixCls}-#{$currentClass} {
+      width: 100%;
+
+      .#{$prefixCls}-#{$currentClass}-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+
+      .#{$prefixCls}-#{$currentClass}-text {
+        color: #646566;
+        font-size: 14px;
+        margin-right: 8px;
+        margin-bottom: 8px;
+        white-space: nowrap;
+      }
+
+      .#{$prefixCls}-#{$currentClass}-item {
+        width: fit-content;
+        max-width: 100%;
+        height: 30px;
+        padding: 4px 12px;
+        background: transparent;
+        border-radius: 2px;
+        border: 1px solid #406bd466;
+        margin-right: 8px;
+        margin-bottom: 8px;
+        cursor: pointer;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        & > div {
+          font-size: 14px;
+          font-weight: 400;
+          color: #4068d4;
+        }
+        &.disabled {
+          border-color: #181f434d;
+          & > div {
+            color: #181f434d;
+          }
+        }
+      }
+    }
+  }
+
+  :local(.m-quick-reply) {
+    &.#{$prefixCls}-#{$currentClass} {
+      width: 100%;
+
+      .#{$prefixCls}-#{$currentClass}-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+
+      .#{$prefixCls}-#{$currentClass}-text {
+        color: #646566;
+        font-size: 0.28rem;
+        margin-left: 0.16rem;
+        margin-right: 0.08rem;
+        margin-bottom: 0.08rem;
+        white-space: nowrap;
+      }
+
+      .#{$prefixCls}-#{$currentClass}-item {
+        margin-left: 0.16rem;
+        border-radius: 0.24rem;
+        border: 1px solid #4b7aff;
+        background: transparent;
+        line-height: 0.3rem;
+        padding: 0.16rem;
+        margin-bottom: 0.16rem;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        & > div {
+          font-size: 0.24rem;
+          font-weight: 400;
+          color: #4b7affff;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          white-space: nowrap;
+        }
+        &.disabled {
+          border-color: #181f434d;
+          & > div {
+            color: #181f434d;
+          }
+        }
+      }
+    }
+  }
+}

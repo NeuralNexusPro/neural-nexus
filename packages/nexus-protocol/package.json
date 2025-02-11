@@ -1,0 +1,25 @@
+{
+  "name": "@neural-nexus/nexus-protocol",
+  "version": "0.0.1",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "watch": "tsc -p tsconfig.json -w",
+    "prepublish": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NeuralNexusPro/neural-nexus.git"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "author": "archersado",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.4.4"
+  }
+}

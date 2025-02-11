@@ -1,0 +1,21 @@
+// SendConfirm
+$send-confirm-dialog-width: 480px;
+$send-confirm-dialog-margin: 20px;
+$send-confirm-inner-height: 320px;
+
+.SendConfirm {
+  .Modal-dialog {
+    width: $send-confirm-dialog-width;
+    margin: $send-confirm-dialog-margin;
+  }
+}
+
+.SendConfirm-inner {
+  height: $send-confirm-inner-height;
+  text-align: center;
+
+  img {
+    max-width: 100%;
+    max-height: 100%;
+  }
+}

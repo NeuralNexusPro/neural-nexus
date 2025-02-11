@@ -1,0 +1,45 @@
+$bubble-radius-pc: 4px;
+$bubble-radius-mobile: 0.24rem;
+
+@function bubble-border-radius($type, $radius) {
+  @if $type == 'user' {
+    @return $radius 0 $radius $radius;
+  } @else if $type == 'bot' {
+    @return 0 $radius $radius $radius;
+  }
+  @return $radius;
+}
+
+@function var-with-default($value) {
+  @return var(--session-#{$value}, var(--default-#{$value}));
+}
+
+@mixin session-bubble-style-mobile($type) {
+  @include session-bubble-style($type, $bubble-radius-mobile);
+}
+
+@mixin session-bubble-style($type, $radius: $bubble-radius-pc) {
+  --b: #{var-with-default(#{$type}-bubble-border-width)};
+  // --r: #{$radius}; /* radius */
+  position: relative;
+  background: var-with-default(#{$type}-bubble-background-value); /* background color with alpha */
+  background-repeat: no-repeat;
+  background-size: contain;
+  border-radius: bubble-border-radius($type, $radius);
+  color: var-with-default(#{$type}-bubble-font-color);
+  margin: var(--b);
+
+  &:before {
+    content: '';
+    position: absolute;
+    // inset: calc(-1 * var(--b));
+    padding: var(--b);
+    border-radius: bubble-border-radius($type, calc(var(--b) + $radius));
+    background: var-with-default(#{$type}-bubble-border-color); /* gradient border */
+    // opacity: .5; /* alpha for border */
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
+}

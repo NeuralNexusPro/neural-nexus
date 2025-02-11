@@ -1,0 +1,35 @@
+{
+  "name": "@neural-nexus/neural-client-runtime",
+  "version": "0.0.1",
+  "description": "",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "watch": "tsc -p tsconfig.json -w",
+    "prepublish": "npm run build"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NeuralNexusPro/neural-nexus.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@neural-nexus/nexus-protocol": "^0.0.1",
+    "@neural-nexus/neural-channel": "^0.0.1",
+    "uuid": "^10.0.0"
+  },
+  "devDependencies": {
+    "@types/uuid": "^10.0.0",
+    "eslint": "^8.28.0",
+    "typescript": "^4.8.4"
+  }
+}

@@ -1,0 +1,15 @@
+.container {
+  &.pc {
+    width: 100%;
+    height: fit-content;
+    min-height: 40px;
+    max-width: 660px;
+    display: flex;
+  }
+
+  &.mobile {
+    width: 100%;
+    height: fit-content;
+    display: flex;
+  }
+}

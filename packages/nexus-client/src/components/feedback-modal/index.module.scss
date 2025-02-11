@@ -1,0 +1,30 @@
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  .tag {
+    width: fit-content;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+    background-color: #f2f4f8;
+    border-radius: 16px;
+    cursor: pointer;
+    &.active {
+      background-color: #e6f2ff;
+      color: #6b96ff;
+    }
+  }
+}
+
+.answer {
+  margin: 12px 0;
+  .text {
+    margin-bottom: 8px;
+  }
+}
+
+.footer {
+  margin-top: 32px !important;
+}
