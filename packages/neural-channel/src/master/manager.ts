@@ -4,7 +4,7 @@ import { logger } from '../utils/log'
 import { MessageProtocol, MessageType } from '../type';
 import { messageBuilder, messageParser } from '../message/message';
 
-export const CHANNEL_MANAGER_SYMBOL = Symbol('ChannelManager');
+export const CHANNEL_MANAGER_SYMBOL = '___NEURAL_NEXUS_CHANNEL_SYMBOL___';
 export default class MessageChannelManager {
     private channels: ChannelStore = new Map();
     private channelIndex = new Map<string, string[]>();
