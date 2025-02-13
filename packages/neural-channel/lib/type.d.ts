@@ -1,3 +1,4 @@
+import { Manager } from "src";
 export type MessageHandler = (data: any) => void;
 export type ChannelStore = Map<string, ChannelPorts>;
 export type ChannelStores = Map<string, ChannelPorts[]>;
@@ -37,5 +38,6 @@ declare global {
     interface Window {
         isMainWindow?: boolean;
         __messageChannelManagerInstance__?: any;
+        ___NEURAL_NEXUS_CHANNEL_SYMBOL___: Manager;
     }
 }

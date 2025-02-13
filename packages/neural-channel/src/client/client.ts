@@ -18,6 +18,7 @@ export default class ChannelClient {
     this.enableLogging = options.enableLogging || false;
     this.group = options.group;
     this.logger = logger(name, this.enableLogging);
+    return this;
   }
 
   on(type: string, callback: (...any) => void) {

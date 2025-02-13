@@ -62,6 +62,7 @@ export default class ChannelClient {
         this.enableLogging = options.enableLogging || false;
         this.group = options.group;
         this.logger = logger(name, this.enableLogging);
+        return this;
     }
     on(type, callback) {
         if (!this.eventMap.has(type)) {
@@ -70,6 +71,11 @@ export default class ChannelClient {
         else {
             const currentListeners = this.eventMap.get(type);
             this.eventMap.set(type, [...currentListeners, callback]);
+        }
+    }
+    remove(eventName) {
+        if (this.eventMap.has(eventName)) {
+            this.eventMap.delete(eventName);
         }
     }
     handshake() {

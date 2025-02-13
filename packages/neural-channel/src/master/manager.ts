@@ -59,6 +59,7 @@ export default class MessageChannelManager {
                 this.disconnect(soruce);
                 break;
             case MessageType.BROADCAST_REQUEST:
+                this.trigger(messageType, messagePayload);
                 this.broadcastMessage<any>(payload);
                 break;
             case MessageType.UNICAST_REQUEST: {

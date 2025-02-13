@@ -2,7 +2,7 @@ import MessageBufferQueue from './message-buffer';
 import { logger } from '../utils/log';
 import { MessageType } from '../type';
 import { messageBuilder, messageParser } from '../message/message';
-export const CHANNEL_MANAGER_SYMBOL = Symbol('ChannelManager');
+export const CHANNEL_MANAGER_SYMBOL = '___NEURAL_NEXUS_CHANNEL_SYMBOL___';
 export default class MessageChannelManager {
     constructor(options = {}) {
         var _a;
@@ -24,6 +24,7 @@ export default class MessageChannelManager {
                     this.disconnect(soruce);
                     break;
                 case MessageType.BROADCAST_REQUEST:
+                    this.trigger(messageType, messagePayload);
                     this.broadcastMessage(payload);
                     break;
                 case MessageType.UNICAST_REQUEST:
@@ -195,6 +196,11 @@ export default class MessageChannelManager {
         }
         else {
             this.masterEventMap.set(eventName, [callback]);
+        }
+    }
+    remove(eventName) {
+        if (this.masterEventMap.has(eventName)) {
+            this.masterEventMap.delete(eventName);
         }
     }
     trigger(eventName, payload) {

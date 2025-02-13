@@ -8,6 +8,7 @@ export default class ChannelClient {
     private logger;
     constructor(name: string, options: any);
     on(type: string, callback: (...any: any[]) => void): void;
+    remove(eventName: string): void;
     private onMasterMessage;
     send: <T>(eventName: string, payload: T) => void;
     sendTo: <T>(eventName: string, payload: T, target?: string) => void;
