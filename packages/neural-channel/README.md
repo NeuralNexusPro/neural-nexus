@@ -63,17 +63,17 @@ client.on('hello', funciton(message: string) {
   console.log(message)
 });
 // client send to manager
-client.send('world', 'hello, i am client')
+client.send<string>('world', 'hello, i am client')
 // client can send to other client
-client.sendTo('hello', 'hello, i am client', 'otherClient')
-client.broadcast('hello', 'hello, i am client');
-client.multicast('clientName', 'hello', 'hello, i am client');
+client.sendTo<string>('hello', 'hello, i am client', 'otherClient')
+client.broadcast<string>('hello', 'hello, i am client');
+client.multicast<string>('clientName', 'hello', 'hello, i am client');
 
 // manager context
 manager.on('world', funciton(message: string) {
   console.log(message)
 });
 manager.sendTo<string>('hello', 'hello, i am manager', 'clientName');
-manager.broadcast('hello', 'hello, i am manager');
-manager.multicast('clientName', 'hello, i am manager');
+manager.broadcast<string>('hello', 'hello, i am manager');
+manager.multicast<string>('clientName', 'hello, i am manager');
 ```
