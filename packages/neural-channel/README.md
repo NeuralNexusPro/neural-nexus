@@ -67,7 +67,7 @@ client.send<string>('world', 'hello, i am client')
 // client can send to other client
 client.sendTo<string>('hello', 'hello, i am client', 'otherClient')
 client.broadcast<string>('hello', 'hello, i am client');
-client.multicast<string>('clientName', 'hello', 'hello, i am client');
+client.multicast<string>('iframe', 'hello', 'hello, i am client');
 
 // manager context
 manager.on('world', funciton(message: string) {
@@ -75,5 +75,5 @@ manager.on('world', funciton(message: string) {
 });
 manager.sendTo<string>('hello', 'hello, i am manager', 'clientName');
 manager.broadcast<string>('hello', 'hello, i am manager');
-manager.multicast<string>('clientName', 'hello, i am manager');
+manager.multicast<string>('iframe', 'hello, i am manager');
 ```
