@@ -50,6 +50,7 @@ declare global {
     interface Window {
         isMainWindow?: boolean;
         __messageChannelManagerInstance__?: any;
-        ___NEURAL_NEXUS_CHANNEL_SYMBOL___: Manager;   
+        ___NEURAL_NEXUS_CHANNEL_SYMBOL___: Manager; 
+        __originPostMessage: any;  
     }
 }

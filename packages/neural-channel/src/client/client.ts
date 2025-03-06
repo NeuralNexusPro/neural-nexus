@@ -150,7 +150,11 @@ export default class ChannelClient {
       window.dispatchEvent(event);
     } else {
       window.addEventListener('message', this.eventListener);
-      window.parent.postMessage(data, "*");
+      if (window.parent?.__originPostMessage) {
+        window.parent?.__originPostMessage(data, "*");
+      } else {
+        window.parent.postMessage(data, "*");
+      }
     }
     return this.disconnect
   }

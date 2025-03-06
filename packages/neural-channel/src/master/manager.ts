@@ -237,7 +237,12 @@ export default class MessageChannelManager {
                 MessageType.HANDSHAKE_REPLY,
                 this.name,
             )
-            event.source?.postMessage(channelMessage, { targetOrigin: '*', transfer: [remotePort] });
+
+            if ((event.source as Window)?.__originPostMessage) {
+                (event.source as Window)?.__originPostMessage(channelMessage, { targetOrigin: '*', transfer: [remotePort] });
+            } else {
+                event.source?.postMessage(channelMessage, { targetOrigin: '*', transfer: [remotePort] });
+            }
         }
     }
 
