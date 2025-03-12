@@ -238,11 +238,16 @@ export default class MessageChannelManager {
                 this.name,
             )
 
-            if ((event.source as Window)?.__originPostMessage) {
-                (event.source as Window)?.__originPostMessage(channelMessage, { targetOrigin: '*', transfer: [remotePort] });
-            } else {
+            try {
+                if ((event.source as Window)?.__originPostMessage) {
+                    (event.source as Window)?.__originPostMessage(channelMessage, { targetOrigin: '*', transfer: [remotePort] });
+                } else {
+                    event.source?.postMessage(channelMessage, { targetOrigin: '*', transfer: [remotePort] });
+                }
+            } catch (e) {
                 event.source?.postMessage(channelMessage, { targetOrigin: '*', transfer: [remotePort] });
             }
+
         }
     }
 

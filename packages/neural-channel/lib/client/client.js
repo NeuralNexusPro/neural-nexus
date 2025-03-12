@@ -79,6 +79,7 @@ export default class ChannelClient {
         }
     }
     handshake() {
+        var _a, _b;
         const self = this;
         this.eventListener = (event) => {
             if (event instanceof CustomEvent) {
@@ -118,7 +119,12 @@ export default class ChannelClient {
         }
         else {
             window.addEventListener('message', this.eventListener);
-            window.parent.postMessage(data, "*");
+            if ((_a = window.parent) === null || _a === void 0 ? void 0 : _a.__originPostMessage) {
+                (_b = window.parent) === null || _b === void 0 ? void 0 : _b.__originPostMessage(data, "*");
+            }
+            else {
+                window.parent.postMessage(data, "*");
+            }
         }
         return this.disconnect;
     }
