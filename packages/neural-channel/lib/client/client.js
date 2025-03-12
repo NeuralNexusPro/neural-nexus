@@ -10,11 +10,12 @@ export default class ChannelClient {
         this.onMasterMessage = (event) => {
             const { data } = event;
             const { type, payload } = messageParser(data);
-            if (!this.eventMap.has(type))
+            const { type: eventName, payload: eventPayload } = payload;
+            if (!this.eventMap.has(eventName))
                 console.warn(`消息 ${type} 不存在可处理逻辑!`);
-            const handlers = this.eventMap.get(type);
+            const handlers = this.eventMap.get(eventName);
             handlers === null || handlers === void 0 ? void 0 : handlers.forEach(handler => {
-                handler(payload);
+                handler(eventPayload);
             });
         };
         this.send = (eventName, payload) => {
