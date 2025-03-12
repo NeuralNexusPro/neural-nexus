@@ -62,7 +62,7 @@ export default class MessageChannelManager {
             }
         };
         this.handleClientHandshake = (event) => {
-            var _a, _b, _c;
+            var _a, _b, _c, _d;
             if (event instanceof CustomEvent) {
                 const { id: msgId, type, source, payload } = event.detail;
                 if (this.bufferQueue.has(msgId)) {
@@ -159,11 +159,16 @@ export default class MessageChannelManager {
                     }
                 }
                 const channelMessage = messageBuilder(MessageType.HANDSHAKE_REPLY, MessageType.HANDSHAKE_REPLY, this.name);
-                if ((_a = event.source) === null || _a === void 0 ? void 0 : _a.__originPostMessage) {
-                    (_b = event.source) === null || _b === void 0 ? void 0 : _b.__originPostMessage(channelMessage, { targetOrigin: '*', transfer: [remotePort] });
+                try {
+                    if ((_a = event.source) === null || _a === void 0 ? void 0 : _a.__originPostMessage) {
+                        (_b = event.source) === null || _b === void 0 ? void 0 : _b.__originPostMessage(channelMessage, { targetOrigin: '*', transfer: [remotePort] });
+                    }
+                    else {
+                        (_c = event.source) === null || _c === void 0 ? void 0 : _c.postMessage(channelMessage, { targetOrigin: '*', transfer: [remotePort] });
+                    }
                 }
-                else {
-                    (_c = event.source) === null || _c === void 0 ? void 0 : _c.postMessage(channelMessage, { targetOrigin: '*', transfer: [remotePort] });
+                catch (e) {
+                    (_d = event.source) === null || _d === void 0 ? void 0 : _d.postMessage(channelMessage, { targetOrigin: '*', transfer: [remotePort] });
                 }
             }
         };

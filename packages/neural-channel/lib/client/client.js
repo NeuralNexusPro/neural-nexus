@@ -119,10 +119,15 @@ export default class ChannelClient {
         }
         else {
             window.addEventListener('message', this.eventListener);
-            if ((_a = window.parent) === null || _a === void 0 ? void 0 : _a.__originPostMessage) {
-                (_b = window.parent) === null || _b === void 0 ? void 0 : _b.__originPostMessage(data, "*");
+            try {
+                if ((_a = window.parent) === null || _a === void 0 ? void 0 : _a.__originPostMessage) {
+                    (_b = window.parent) === null || _b === void 0 ? void 0 : _b.__originPostMessage(data, "*");
+                }
+                else {
+                    window.parent.postMessage(data, "*");
+                }
             }
-            else {
+            catch (e) {
                 window.parent.postMessage(data, "*");
             }
         }
