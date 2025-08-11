@@ -27,7 +27,8 @@ export interface IPage extends IViewOpts {
 export enum ReconcilerType {
   QIANKUN = 'qiankun',
   MICROAPP = 'microapp',
-  IFRAME = 'iframe'
+  IFRAME = 'iframe',
+  WEBVIEW = 'webview'
 }
 
 

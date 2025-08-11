@@ -119,7 +119,11 @@ export default class ChannelClient {
           case MessageType.HANDSHAKE_REPLY: {
             self.master = payload.port;
             self.master.onmessage = self.onMasterMessage;
+            this.logger.info('handshake succuess!');
+            window.removeEventListener("message", this.eventListener);
           }
+          default:
+            break;
         }
       } else {
         const { type } = event.data; 
@@ -128,11 +132,13 @@ export default class ChannelClient {
             const [ masterPort ] = event.ports;
             self.master = masterPort;
             self.master.onmessage = self.onMasterMessage;
+            this.logger.info('handshake succuess!');            
+            window.removeEventListener("message", this.eventListener);            
           }
+          default:
+            break
         }
       }
-      this.logger.info('handshake succuess!');
-      window.removeEventListener("message", this.eventListener);
     }
     const data: ChannelMessage<{name: string, group: string}> = messageBuilder(
       MessageType.HANDSHAKE,

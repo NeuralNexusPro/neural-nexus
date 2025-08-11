@@ -17,7 +17,7 @@ export default class MessageChannelManager {
     on(eventName: string, callback: (...any: any[]) => void): void;
     remove(eventName: any): void;
     trigger<T>(eventName: string, payload?: T): void;
-    disconnect(channelName: string): void;
+    disconnect(channelName?: string): void;
     private handleClientEvent;
     private handleClientHandshake;
     broadcast<T>(eventName: string, payload: T): void;
