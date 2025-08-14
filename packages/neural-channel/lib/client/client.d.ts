@@ -6,6 +6,7 @@ export default class ChannelClient {
     eventMap: Map<string, Function[]>;
     eventListener: (event: MessageEvent) => void;
     private logger;
+    private handshakeId;
     constructor(name: string, options: any);
     on(type: string, callback: (...any: any[]) => void): void;
     remove(eventName: string): void;

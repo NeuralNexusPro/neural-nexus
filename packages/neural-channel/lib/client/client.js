@@ -11,6 +11,7 @@ export default class ChannelClient {
             const { data } = event;
             const { type, payload } = messageParser(data);
             const { type: eventName, payload: eventPayload } = payload;
+            console.log("client onmessage", data);
             if (!this.eventMap.has(eventName))
                 console.warn(`消息 ${type} 不存在可处理逻辑!`);
             const handlers = this.eventMap.get(eventName);
@@ -55,6 +56,7 @@ export default class ChannelClient {
             this.master.postMessage(channelMessage);
         };
         this.disconnect = () => {
+            console.log('client disconnect');
             this.eventMap.clear();
             this.master = undefined;
             this.send(MessageType.DISCONNECT, MessageType.DISCONNECT);
@@ -88,27 +90,41 @@ export default class ChannelClient {
                 const { type, payload } = detail;
                 switch (type) {
                     case MessageType.HANDSHAKE_REPLY: {
+                        if (payload.handshakeId !== this.handshakeId)
+                            return;
                         self.master = payload.port;
                         self.master.onmessage = self.onMasterMessage;
+                        self.master.start();
+                        this.logger.info('handshake succuess!');
+                        window.removeEventListener("message", this.eventListener);
                     }
+                    default:
+                        break;
                 }
             }
             else {
-                const { type } = event.data;
+                const { type, payload } = event.data;
                 switch (type) {
                     case MessageType.HANDSHAKE_REPLY: {
+                        if (payload.handshakeId !== this.handshakeId)
+                            return;
                         const [masterPort] = event.ports;
                         self.master = masterPort;
                         self.master.onmessage = self.onMasterMessage;
+                        self.master.start();
+                        this.logger.info('handshake succuess!');
+                        window.removeEventListener("message", this.eventListener);
                     }
+                    default:
+                        break;
                 }
             }
-            this.logger.info('handshake succuess!');
-            window.removeEventListener("message", this.eventListener);
         };
+        const handshakeId = `${this.name}-${uuid.v4()}`;
+        this.handshakeId = handshakeId;
         const data = messageBuilder(MessageType.HANDSHAKE, {
             name: this.name,
-            id: `${this.name}-${uuid.v4()}`,
+            id: handshakeId,
             group: this.group
         }, this.name);
         if (window[CHANNEL_MANAGER_SYMBOL]) {

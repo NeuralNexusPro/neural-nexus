@@ -12,6 +12,7 @@ export default class ChannelClient {
   eventMap: Map<string, Function[]> = new Map();
   eventListener: (event: MessageEvent) => void;
   private logger;
+  private handshakeId: string;
 
   constructor(name: string, options) {
     this.name = name;
@@ -113,12 +114,14 @@ export default class ChannelClient {
     const self = this;
     this.eventListener = (event: MessageEvent | CustomEvent) => {
       if (event instanceof CustomEvent) {
-        const detail = event.detail as ChannelMessage<{port: MessagePort}>;
+        const detail = event.detail as ChannelMessage<{port: MessagePort, handshakeId: string}>;
         const { type, payload } = detail;
         switch(type) {
           case MessageType.HANDSHAKE_REPLY: {
+            if (payload.handshakeId !== this.handshakeId) return;
             self.master = payload.port;
             self.master.onmessage = self.onMasterMessage;
+            self.master.start();
             this.logger.info('handshake succuess!');
             window.removeEventListener("message", this.eventListener);
           }
@@ -126,12 +129,14 @@ export default class ChannelClient {
             break;
         }
       } else {
-        const { type } = event.data; 
+        const { type, payload } = event.data; 
         switch(type) {
           case MessageType.HANDSHAKE_REPLY: {
+            if (payload.handshakeId !== this.handshakeId) return;            
             const [ masterPort ] = event.ports;
             self.master = masterPort;
             self.master.onmessage = self.onMasterMessage;
+            self.master.start();
             this.logger.info('handshake succuess!');            
             window.removeEventListener("message", this.eventListener);            
           }
@@ -140,11 +145,13 @@ export default class ChannelClient {
         }
       }
     }
+    const handshakeId = `${this.name}-${uuid.v4()}`;
+    this.handshakeId = handshakeId;
     const data: ChannelMessage<{name: string, group: string}> = messageBuilder(
       MessageType.HANDSHAKE,
       {
         name: this.name,
-        id: `${this.name}-${uuid.v4()}`,
+        id: handshakeId,
         group: this.group
       },
       this.name,

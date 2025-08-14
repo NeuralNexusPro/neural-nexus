@@ -51,6 +51,7 @@ export default class MessageChannelManager {
     private onMessage = (event: MessageEvent) => {
         const { type, soruce, target, payload } = event.data;
         const { type: messageType, payload: messagePayload, group } = messageParser(payload)
+
         switch(type) {
             case MessageType.HANDSHAKE: 
                 this.handleClientHandshake(event.data);
@@ -60,11 +61,11 @@ export default class MessageChannelManager {
                 break;
             case MessageType.BROADCAST_REQUEST:
                 this.trigger(messageType, messagePayload);
-                this.broadcastMessage<any>(payload);
+                this.broadcastMessage<any>(event.data);
                 break;
             case MessageType.UNICAST_REQUEST: {
                 if (target) {
-                    this.sendMessage<any>(payload, target)
+                    this.sendMessage<any>(event.data, target)
                 } else {
                     this.handleClientEvent(messageType, messagePayload)
                 }
@@ -75,7 +76,7 @@ export default class MessageChannelManager {
                     this.logger.error(`当前不存在组播分组 ${group}`, event.data);
                     return;
                 }
-                this.multicastMessage(group, payload);
+                this.multicastMessage(group, event.data);
             }   
             default:
                 break;
@@ -171,6 +172,7 @@ export default class MessageChannelManager {
                 remotePort
             }
             clientPort.onmessage = this.onMessage;
+            clientPort.start();
             if (this.channelIndex.has(name)) {
                 const index = this.channelIndex.get(name);
                 this.channelIndex.set(name, [ ...index, id ])
@@ -188,7 +190,8 @@ export default class MessageChannelManager {
                 }
             }
             const message = {
-                port: remotePort
+                port: remotePort,
+                handshakeId: id
             }
             const channelMessage: ChannelMessage<{port: MessagePort}> = messageBuilder(
                 MessageType.HANDSHAKE_REPLY,         
@@ -226,6 +229,7 @@ export default class MessageChannelManager {
                 remotePort
             }
             clientPort.onmessage = this.onMessage;
+            clientPort.start();
             if (this.channelIndex.has(name)) {
                 const index = this.channelIndex.get(name);
                 this.channelIndex.set(name, [ ...index, id ])
@@ -243,7 +247,10 @@ export default class MessageChannelManager {
             }
             const channelMessage: ChannelMessage<string> = messageBuilder(
                 MessageType.HANDSHAKE_REPLY,         
-                MessageType.HANDSHAKE_REPLY,
+                {
+                    port: remotePort,
+                    handshakeId: id
+                },
                 this.name,
             )
 
