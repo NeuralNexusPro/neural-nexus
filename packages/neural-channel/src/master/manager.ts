@@ -17,11 +17,8 @@ export default class MessageChannelManager {
     name: string;
     
     constructor(options: ManagerOptions = {}) {
-        if (window.isMainWindow) {
-            this.logger.warn('不能重复注册 channel master');
-            return
-        }
         if (window[CHANNEL_MANAGER_SYMBOL]) {
+            this.logger.warn('不能重复注册 channel master');            
             return window[CHANNEL_MANAGER_SYMBOL];
         }
         this.name = 'master';
