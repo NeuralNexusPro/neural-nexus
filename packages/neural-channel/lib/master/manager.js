@@ -16,7 +16,6 @@ export default class MessageChannelManager {
         this.onMessage = (event) => {
             const { type, soruce, target, payload } = event.data;
             const { type: messageType, payload: messagePayload, group } = messageParser(payload);
-            console.log("manager onmessage", event.data);
             switch (type) {
                 case MessageType.HANDSHAKE:
                     this.handleClientHandshake(event.data);

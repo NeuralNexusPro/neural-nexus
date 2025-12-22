@@ -11,7 +11,6 @@ export default class ChannelClient {
             const { data } = event;
             const { type, payload } = messageParser(data);
             const { type: eventName, payload: eventPayload } = payload;
-            console.log("client onmessage", data);
             if (!this.eventMap.has(eventName))
                 console.warn(`消息 ${type} 不存在可处理逻辑!`);
             const handlers = this.eventMap.get(eventName);
@@ -56,7 +55,6 @@ export default class ChannelClient {
             this.master.postMessage(channelMessage);
         };
         this.disconnect = () => {
-            console.log('client disconnect');
             this.eventMap.clear();
             this.master = undefined;
             this.send(MessageType.DISCONNECT, MessageType.DISCONNECT);
