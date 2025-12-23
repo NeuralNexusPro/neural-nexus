@@ -1,6 +1,6 @@
 {
   "name": "@neural-nexus/mcp-in-browser",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -15,7 +15,7 @@
   "license": "MIT",
   "dependencies": {
     "@modelcontextprotocol/sdk": "1.17.1",
-    "@neural-nexus/neural-channel": "^0.1.1",
+    "@neural-nexus/neural-channel": "^0.1.5",
     "lodash": "^4.17.21",
     "reflect-metadata": "^0.2.2",
     "uuid": "^9.0.1",
