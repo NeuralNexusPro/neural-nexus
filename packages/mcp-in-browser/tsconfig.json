@@ -1,6 +1,14 @@
 {
   "compilerOptions": {
     "skipLibCheck": true,
+    "verbatimModuleSyntax": false,
+    "noEmit": false,
+    "allowImportingTsExtensions": false,
+    "noUncheckedIndexedAccess": false,
+    "noErrorTruncation": true,    
+    "diagnostics": false,
+    "maxNodeModuleJsDepth": 0,
+    "disableSizeLimit": true,    
     "strict": true,
     "module": "ESNext",
     "declaration": true,
@@ -25,6 +33,7 @@
       "@libs/*": ["src/libs/*"]
     }
   },
+
   "exclude": [
     "node_modules",
     "./lib/**/*"
